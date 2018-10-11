@@ -115,7 +115,7 @@ const defaultProps = {
 
   // internationalization
   displayFormat: () => 'P',
-  monthFormat: 'MMMM YYYY',
+  monthFormat: 'MMMM yyyy',
   weekDayFormat: 'eee',
   phrases: DateRangePickerPhrases,
   locale: null,
@@ -529,6 +529,7 @@ class DateRangePicker extends BaseClass {
       small,
       regular,
       styles,
+      locale
     } = this.props;
 
     const { isDateRangePickerInputFocused } = this.state;
@@ -578,6 +579,7 @@ class DateRangePicker extends BaseClass {
         small={small}
         regular={regular}
         verticalSpacing={verticalSpacing}
+        locale={locale}
       />
     );
 

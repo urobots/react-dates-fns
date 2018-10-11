@@ -13,11 +13,10 @@ import IconPositionShape from '../shapes/IconPositionShape';
 import DisabledShape from '../shapes/DisabledShape';
 
 import toLocalizedDateString from '../utils/toLocalizedDateString';
-
 import isInclusivelyAfterDay from '../utils/isInclusivelyAfterDay';
 import isBeforeDay from '../utils/isBeforeDay';
-
 import BaseClass from '../utils/baseClass';
+import getLocale from '../utils/getLocale';
 
 import format from 'date-fns/format';
 import toDate from 'date-fns/toDate';
@@ -80,6 +79,7 @@ const propTypes = forbidExtraProps({
 
   // i18n
   phrases: PropTypes.shape(getPhrasePropTypes(DateRangePickerInputPhrases)),
+  locale: PropTypes.string,
 
   isRTL: PropTypes.bool
 });
@@ -132,6 +132,7 @@ const defaultProps = {
 
   // i18n
   phrases: DateRangePickerInputPhrases,
+  locale: null,
 
   isRTL: false
 };
@@ -251,9 +252,9 @@ export default class DateRangePickerInputController extends BaseClass {
   getDateString(date) {
     const displayFormat = this.getDisplayFormat();
     if (date && displayFormat) {
-      return date && format(date, displayFormat);
+      return date && format(date, displayFormat, {locale: getLocale(this.props.locale)});
     }
-    return toLocalizedDateString(date);
+    return toLocalizedDateString(date, null, this.props.locale);
   }
 
   clearDates() {

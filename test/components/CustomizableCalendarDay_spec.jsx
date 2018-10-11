@@ -120,7 +120,7 @@ describe('CustomizableCalendarDay', () => {
           <CustomizableCalendarDay
             modifiers={modifiers}
             day={day}
-            ariaLabelFormat="MMMM Do YYYY"
+            ariaLabelFormat="MMMM Do yyyy"
           />
         )).dive();
 
@@ -136,7 +136,7 @@ describe('CustomizableCalendarDay', () => {
         wrapper = shallow((
           <CustomizableCalendarDay
             day={day}
-            ariaLabelFormat="MMMM Do YYYY"
+            ariaLabelFormat="MMMM Do yyyy"
           />
         )).dive();
       });

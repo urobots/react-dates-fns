@@ -72,7 +72,7 @@ const defaultProps = {
 
   // internationalization props
   displayFormat: () => 'P',
-  monthFormat: 'MMMM YYYY',
+  monthFormat: 'MMMM yyyy',
   phrases: SingleDatePickerPhrases,
 };
 

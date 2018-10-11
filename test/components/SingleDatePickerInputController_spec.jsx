@@ -32,7 +32,7 @@ describe('SingleDatePickerInputController', () => {
 
   describe('#onChange', () => {
     describe('valid future date string', () => {
-      const futureDateString = format(addDays(new Date(), 10), 'YYYY-MM-dd');
+      const futureDateString = format(addDays(new Date(), 10), 'yyyy-MM-dd');
       it('calls props.onDateChange once', () => {
         const onDateChangeStub = sinon.stub();
         const wrapper = shallow((

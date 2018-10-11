@@ -107,8 +107,16 @@ storiesOf('DayPickerSingleDateController', module)
       onOutsideClick={action('DayPickerSingleDateController::onOutsideClick')}
       onPrevMonthClick={action('DayPickerSingleDateController::onPrevMonthClick')}
       onNextMonthClick={action('DayPickerSingleDateController::onNextMonthClick')}
-      monthFormat="YYYY[年]MMMM"
-      locale="zh-cn"
+      monthFormat="yyyy[年]MMMM"
+      locale="zh-CN"
+    />
+  ))
+  .add('non-english locale #2', () => (
+    <DayPickerSingleDateControllerWrapper
+      onOutsideClick={action('DayPickerSingleDateController::onOutsideClick')}
+      onPrevMonthClick={action('DayPickerSingleDateController::onPrevMonthClick')}
+      onNextMonthClick={action('DayPickerSingleDateController::onNextMonthClick')}
+      locale="pt-BR"
     />
   ))
   .add('single month', () => (

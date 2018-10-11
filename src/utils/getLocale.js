@@ -1,6 +1,6 @@
-const enUS = require('date-fns/locale/en-US');
-const ptBR = require('date-fns/locale/pt-BR');
-const zhCN = require('date-fns/locale/zh-CN');
+import enUS from 'date-fns/locale/en-US';
+import ptBR from 'date-fns/locale/pt-BR';
+import zhCN from 'date-fns/locale/zh-CN';
 
 export default function getLocale(locale) {
   switch (locale) {

@@ -111,7 +111,7 @@
   "dependencies": {
     "airbnb-prop-types": "^2.10.0",
     "consolidated-events": "^1.1.1 || ^2.0.0",
-    "date-fns": "^2.0.0-alpha.21",
+    "date-fns": "^2.0.0-alpha.22",
     "is-touch-device": "^1.0.1",
     "lodash": "^4.1.1",
     "object.assign": "^4.1.0",

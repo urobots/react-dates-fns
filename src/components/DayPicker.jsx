@@ -174,7 +174,7 @@ export const defaultProps = {
   showKeyboardShortcuts: false,
 
   // internationalization
-  monthFormat: 'MMMM YYYY',
+  monthFormat: 'MMMM yyyy',
   weekDayFormat: 'eee',
   phrases: DayPickerPhrases,
   dayAriaLabelFormat: undefined,

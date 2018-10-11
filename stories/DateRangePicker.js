@@ -71,12 +71,17 @@ storiesOf('DateRangePicker (DRP)', module)
       showClearDates
       startDatePlaceholderText="入住日期"
       endDatePlaceholderText="退房日期"
-      monthFormat="YYYY[年]MMMM"
+      monthFormat="yyyy[年]MMMM"
       phrases={{
         closeDatePicker: '关闭',
         clearDates: '清除日期',
       }}
       locale="zh-CN"
+    />
+  ))
+  .add('non-english locale #2', () => (
+    <DateRangePickerWrapper
+      locale="pt-BR"
     />
   ))
   .add('vertical with custom height', () => (

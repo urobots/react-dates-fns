@@ -30,7 +30,7 @@ describe('toLocalizedDateString', () => {
 
   it('converts custom format date strings with format passed in', () => {
     const testDate = new Date(1991, 7, 13);
-    const dateString = toLocalizedDateString(format(testDate, 'YYYY---dd/MM'), 'YYYY---dd/MM');
+    const dateString = toLocalizedDateString(format(testDate, 'yyyy---dd/MM'), 'yyyy---dd/MM');
     expect(dateString).to.equal(format(testDate, 'P'));
   });
 });

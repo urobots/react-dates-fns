@@ -146,7 +146,7 @@ const defaultProps = {
   showKeyboardShortcuts: false,
 
   // i18n
-  monthFormat: 'MMMM YYYY',
+  monthFormat: 'MMMM yyyy',
   weekDayFormat: 'eee',
   phrases: DayPickerPhrases,
   dayAriaLabelFormat: undefined,

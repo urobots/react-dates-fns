@@ -111,7 +111,7 @@ const defaultProps = {
 
   // internationalization props
   displayFormat: () => 'P',
-  monthFormat: 'MMMM YYYY',
+  monthFormat: 'MMMM yyyy',
   weekDayFormat: 'eee',
   phrases: SingleDatePickerPhrases,
   dayAriaLabelFormat: undefined,
@@ -513,6 +513,7 @@ class SingleDatePicker extends BaseClass {
       keepOpenOnDateSelect,
       styles,
       isOutsideRange,
+      locale
     } = this.props;
 
     const { isInputFocused } = this.state;
@@ -554,6 +555,7 @@ class SingleDatePicker extends BaseClass {
         verticalSpacing={verticalSpacing}
         reopenPickerOnClearDate={reopenPickerOnClearDate}
         keepOpenOnDateSelect={keepOpenOnDateSelect}
+        locale={locale}
       />
     );
 

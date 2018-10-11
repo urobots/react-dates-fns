@@ -88,7 +88,7 @@ const defaultProps = {
 
   // internationalization
   displayFormat: () => 'P',
-  monthFormat: 'MMMM YYYY',
+  monthFormat: 'MMMM yyyy',
   phrases: DateRangePickerPhrases,
   locale: null
 };

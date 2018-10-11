@@ -38,12 +38,17 @@ storiesOf('SingleDatePicker (SDP)', module)
   .add('non-english locale (Chinese)', () => (
     <SingleDatePickerWrapper
       placeholder="入住日期"
-      monthFormat="YYYY[年]MMMM"
+      monthFormat="yyyy[年]MMMM"
       phrases={{
         closeDatePicker: '关闭',
         clearDate: '清除日期',
       }}
       locale="zh-cn"
+    />
+  ))
+  .add('non-english locale (Brazilian Portuguese)', () => (
+    <SingleDatePickerWrapper
+      locale="pt-BR"
     />
   ))
   .add('vertical with custom height', () => (
