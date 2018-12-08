@@ -17,7 +17,7 @@ export default function getNumberOfCalendarMonthWeeks(
   let newFirstDayOfWeek;
   if (firstDayOfWeek === null) {
     const localeData = getLocale(locale);
-    newFirstDayOfWeek = localeData.option.weekStartsOn;
+    newFirstDayOfWeek = localeData.options.weekStartsOn;
   } else {
     newFirstDayOfWeek = firstDayOfWeek;
   }

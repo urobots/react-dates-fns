@@ -14,7 +14,6 @@ import getDetachedContainerStyles from '../utils/getDetachedContainerStyles';
 import getInputHeight from '../utils/getInputHeight';
 import isInclusivelyAfterDay from '../utils/isInclusivelyAfterDay';
 import disableScroll from '../utils/disableScroll';
-import BaseClass, { pureComponentAvailable } from '../utils/baseClass';
 
 import DateRangePickerInputController from './DateRangePickerInputController';
 import DayPickerRangeController from './DayPickerRangeController';
@@ -123,7 +122,7 @@ const defaultProps = {
 };
 
 /** @extends React.Component */
-class DateRangePicker extends BaseClass {
+class DateRangePicker extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -680,4 +679,4 @@ export default withStyles(({ reactDates: { color, zIndex } }) => ({
     width: 15,
     fill: color.core.grayLighter,
   },
-}), { pureComponent: pureComponentAvailable })(DateRangePicker);
+}), { pureComponent: typeof React.PureComponent !== 'undefined' })(DateRangePicker);

@@ -1,5 +1,6 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
+import { withInfo } from '@storybook/addon-info';
 
 import {
   VERTICAL_ORIENTATION,
@@ -52,21 +53,21 @@ class TestWrapper extends React.Component {
 }
 
 storiesOf('DateRangePicker (DRP)', module)
-  .add('default', () => (
+  .add('default', withInfo()(() => (
     <DateRangePickerWrapper />
-  ))
-  .add('hidden with display: none', () => (
+  )))
+  .add('hidden with display: none', withInfo()(() => (
     <TestWrapper />
-  ))
-  .add('as part of a form', () => (
+  )))
+  .add('as part of a form', withInfo()(() => (
     <div>
       <DateRangePickerWrapper />
       <TestInput placeholder="Input 1" />
       <TestInput placeholder="Input 2" />
       <TestInput placeholder="Input 3" />
     </div>
-  ))
-  .add('non-english locale', () => (
+  )))
+  .add('non-english locale', withInfo()(() => (
     <DateRangePickerWrapper
       showClearDates
       startDatePlaceholderText="入住日期"
@@ -78,15 +79,15 @@ storiesOf('DateRangePicker (DRP)', module)
       }}
       locale="zh-CN"
     />
-  ))
-  .add('non-english locale #2', () => (
+  )))
+  .add('non-english locale #2', withInfo()(() => (
     <DateRangePickerWrapper
       locale="pt-BR"
     />
-  ))
-  .add('vertical with custom height', () => (
+  )))
+  .add('vertical with custom height', withInfo()(() => (
     <DateRangePickerWrapper
       orientation={VERTICAL_ORIENTATION}
       verticalHeight={568}
     />
-  ));
+  )));

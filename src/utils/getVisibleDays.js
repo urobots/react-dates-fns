@@ -34,7 +34,7 @@ export default function getVisibleDays(
     // days belonging to the previous month
     const localeData = getLocale(locale);
     if (enableOutsideDays) {
-      for (let j = 0; j < localeData.option.weekStartsOn; j += 1) {
+      for (let j = 0; j < localeData.options.weekStartsOn; j += 1) {
         const prevDay = subDays(currentDay, j + 1);
         visibleDays.unshift(prevDay);
       }
@@ -48,9 +48,9 @@ export default function getVisibleDays(
     if (enableOutsideDays) {
       // weekday() returns the index of the day of the week according to the locale
       // this means if the week starts on Monday, weekday() will return 0 for a Monday date, not 1
-      if (localeData.option.weekStartsOn !== 0) {
+      if (localeData.options.weekStartsOn !== 0) {
         // days belonging to the next month
-        for (let k = localeData.option.weekStartsOn, count = 0; k < 7; k += 1, count += 1) {
+        for (let k = localeData.options.weekStartsOn, count = 0; k < 7; k += 1, count += 1) {
           const nextDay = addDays(currentDay, count);
           visibleDays.push(nextDay);
         }

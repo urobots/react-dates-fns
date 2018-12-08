@@ -15,7 +15,6 @@ import DisabledShape from '../shapes/DisabledShape';
 import toLocalizedDateString from '../utils/toLocalizedDateString';
 import isInclusivelyAfterDay from '../utils/isInclusivelyAfterDay';
 import isBeforeDay from '../utils/isBeforeDay';
-import BaseClass from '../utils/baseClass';
 import getLocale from '../utils/getLocale';
 
 import format from 'date-fns/format';
@@ -138,7 +137,7 @@ const defaultProps = {
 };
 
 /** @extends React.Component */
-export default class DateRangePickerInputController extends BaseClass {
+export default class DateRangePickerInputController extends React.PureComponent {
   constructor(props) {
     super(props);
 

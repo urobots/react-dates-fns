@@ -7,6 +7,7 @@
           "svgo": false
         }],
         ["transform-replace-object-assign", { "moduleSpecifier": "object.assign" }],
+        "./scripts/pure-component-fallback.js",
         "istanbul"
       ]
     },
@@ -18,7 +19,8 @@
           "svgo": false
         }],
         ["transform-replace-object-assign", { "moduleSpecifier": "object.assign" }],
-      ],
+        "./scripts/pure-component-fallback.js"
+      ]
     },
 
     "production": {
@@ -28,7 +30,8 @@
           "svgo": false
         }],
         ["transform-replace-object-assign", { "moduleSpecifier": "object.assign" }],
-      ],
+        "./scripts/pure-component-fallback.js"
+      ]
     },
 
     "cjs": {
@@ -38,7 +41,8 @@
           "svgo": false
         }],
         ["transform-replace-object-assign", { "moduleSpecifier": "object.assign" }],
-      ],
+        "./scripts/pure-component-fallback.js"
+      ]
     },
 
     "esm": {
@@ -48,7 +52,8 @@
           "svgo": false
         }],
         ["transform-replace-object-assign", { "moduleSpecifier": "object.assign" }],
-      ],
-    },
-  },
+        "./scripts/pure-component-fallback.js"
+      ]
+    }
+  }
 }

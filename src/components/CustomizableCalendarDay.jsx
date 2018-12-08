@@ -6,7 +6,6 @@ import { css, withStyles, withStylesPropTypes } from 'react-with-styles';
 import { CalendarDayPhrases } from '../defaultPhrases';
 import getPhrasePropTypes from '../utils/getPhrasePropTypes';
 import getCalendarDaySettings from '../utils/getCalendarDaySettings';
-import BaseClass, { pureComponentAvailable } from '../utils/baseClass';
 
 import format from 'date-fns/format';
 import addHours from 'date-fns/addHours';
@@ -219,7 +218,7 @@ const defaultProps = {
 };
 
 /** @extends React.Component */
-class CustomizableCalendarDay extends BaseClass {
+class CustomizableCalendarDay extends React.PureComponent {
   constructor(...args) {
     super(...args);
 
@@ -372,4 +371,4 @@ export default withStyles(({ reactDates: { font } }) => ({
   CalendarDay__defaultCursor: {
     cursor: 'default',
   },
-}), { pureComponent: pureComponentAvailable })(CustomizableCalendarDay);
+}), { pureComponent: typeof React.PureComponent !== 'undefined' })(CustomizableCalendarDay);

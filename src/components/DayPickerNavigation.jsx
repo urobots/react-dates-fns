@@ -5,7 +5,6 @@ import { css, withStyles, withStylesPropTypes } from 'react-with-styles';
 
 import { DayPickerNavigationPhrases } from '../defaultPhrases';
 import getPhrasePropTypes from '../utils/getPhrasePropTypes';
-import { pureComponentAvailable } from '../utils/baseClass';
 
 import LeftArrow from './LeftArrow';
 import RightArrow from './RightArrow';
@@ -20,6 +19,8 @@ import {
 
 const propTypes = forbidExtraProps({
   ...withStylesPropTypes,
+  disablePrev: PropTypes.bool,
+  disableNext: PropTypes.bool,
   navPrev: PropTypes.node,
   navNext: PropTypes.node,
   orientation: ScrollableOrientationShape,
@@ -34,6 +35,8 @@ const propTypes = forbidExtraProps({
 });
 
 const defaultProps = {
+  disablePrev: false,
+  disableNext: false,
   navPrev: null,
   navNext: null,
   orientation: HORIZONTAL_ORIENTATION,
@@ -47,6 +50,8 @@ const defaultProps = {
 };
 
 function DayPickerNavigation({
+  disablePrev,
+  disableNext,
   navPrev,
   navNext,
   onPrevMonthClick,
@@ -75,6 +80,7 @@ function DayPickerNavigation({
         {...css(
           isHorizontal && styles.DayPickerNavigation_svg__horizontal,
           isVertical && styles.DayPickerNavigation_svg__vertical,
+          disableNext && styles.DayPickerNavigation_svg__disabled,
         )}
       />
     );
@@ -91,6 +97,7 @@ function DayPickerNavigation({
         {...css(
           isHorizontal && styles.DayPickerNavigation_svg__horizontal,
           isVertical && styles.DayPickerNavigation_svg__vertical,
+          disablePrev && styles.DayPickerNavigation_svg__disabled,
         )}
       />
     );
@@ -105,14 +112,14 @@ function DayPickerNavigation({
       {...css(
         styles.DayPickerNavigation,
         isHorizontal && styles.DayPickerNavigation__horizontal,
-        ...isVertical && [
+        ...(isVertical ? [
           styles.DayPickerNavigation__vertical,
           isDefaultNav && styles.DayPickerNavigation__verticalDefault,
-        ],
-        ...isVerticalScrollable && [
+        ] : []),
+        ...(isVerticalScrollable ? [
           styles.DayPickerNavigation__verticalScrollable,
           isDefaultNav && styles.DayPickerNavigation__verticalScrollableDefault,
-        ],
+        ] : []),
       )}
     >
       {!isVerticalScrollable && (
@@ -122,29 +129,31 @@ function DayPickerNavigation({
           {...css(
             styles.DayPickerNavigation_button,
             isDefaultNavPrev && styles.DayPickerNavigation_button__default,
-            ...(isHorizontal && [
+            disablePrev && styles.DayPickerNavigation_button__disabled,
+            ...(isHorizontal ? [
               styles.DayPickerNavigation_button__horizontal,
-              ...isDefaultNavPrev && [
+              ...(isDefaultNavPrev ? [
                 styles.DayPickerNavigation_button__horizontalDefault,
                 !isRTL && styles.DayPickerNavigation_leftButton__horizontalDefault,
                 isRTL && styles.DayPickerNavigation_rightButton__horizontalDefault,
-              ],
-            ]),
-            ...(isVertical && [
+              ] : []),
+            ] : []),
+            ...(isVertical ? [
               styles.DayPickerNavigation_button__vertical,
-              ...isDefaultNavPrev && [
+              ...(isDefaultNavPrev ? [
                 styles.DayPickerNavigation_button__verticalDefault,
                 styles.DayPickerNavigation_prevButton__verticalDefault,
-              ],
-            ]),
+              ] : []),
+            ] : []),
           )}
+          aria-disabled={disablePrev ? true : undefined}
           aria-label={phrases.jumpToPrevMonth}
-          onClick={onPrevMonthClick}
-          onKeyUp={(e) => {
+          onClick={disablePrev ? undefined : onPrevMonthClick}
+          onKeyUp={disablePrev ? undefined : (e) => {
             const { key } = e;
             if (key === 'Enter' || key === ' ') onPrevMonthClick(e);
           }}
-          onMouseUp={(e) => {
+          onMouseUp={disablePrev ? undefined : (e) => {
             e.currentTarget.blur();
           }}
         >
@@ -158,32 +167,34 @@ function DayPickerNavigation({
         {...css(
           styles.DayPickerNavigation_button,
           isDefaultNavNext && styles.DayPickerNavigation_button__default,
-          ...(isHorizontal && [
+          disableNext && styles.DayPickerNavigation_button__disabled,
+          ...(isHorizontal ? [
             styles.DayPickerNavigation_button__horizontal,
-            ...isDefaultNavNext && [
+            ...(isDefaultNavNext ? [
               styles.DayPickerNavigation_button__horizontalDefault,
               isRTL && styles.DayPickerNavigation_leftButton__horizontalDefault,
               !isRTL && styles.DayPickerNavigation_rightButton__horizontalDefault,
-            ],
-          ]),
-          ...(isVertical && [
+            ] : []),
+          ] : []),
+          ...(isVertical ? [
             styles.DayPickerNavigation_button__vertical,
             styles.DayPickerNavigation_nextButton__vertical,
-            ...isDefaultNavNext && [
+            ...(isDefaultNavNext ? [
               styles.DayPickerNavigation_button__verticalDefault,
               styles.DayPickerNavigation_nextButton__verticalDefault,
               isVerticalScrollable
                 && styles.DayPickerNavigation_nextButton__verticalScrollableDefault,
-            ],
-          ]),
+            ] : []),
+          ] : []),
         )}
+        aria-disabled={disableNext ? true : undefined}
         aria-label={phrases.jumpToNextMonth}
-        onClick={onNextMonthClick}
-        onKeyUp={(e) => {
+        onClick={disableNext ? undefined : onNextMonthClick}
+        onKeyUp={disableNext ? undefined : (e) => {
           const { key } = e;
           if (key === 'Enter' || key === ' ') onNextMonthClick(e);
         }}
-        onMouseUp={(e) => {
+        onMouseUp={disableNext ? undefined : (e) => {
           e.currentTarget.blur();
         }}
       >
@@ -247,6 +258,20 @@ export default withStyles(({ reactDates: { color, zIndex } }) => ({
     },
   },
 
+  DayPickerNavigation_button__disabled: {
+    cursor: 'default',
+    border: `1px solid ${color.disabled}`,
+     ':focus': {
+      border: `1px solid ${color.disabled}`,
+    },
+     ':hover': {
+      border: `1px solid ${color.disabled}`,
+    },
+     ':active': {
+      background: 'none',
+    },
+  },
+
   DayPickerNavigation_button__horizontal: {
   },
 
@@ -303,4 +328,8 @@ export default withStyles(({ reactDates: { color, zIndex } }) => ({
     width: 42,
     fill: color.text,
   },
-}), { pureComponent: pureComponentAvailable })(DayPickerNavigation);
+
+  DayPickerNavigation_svg__disabled: {
+    fill: color.disabled,
+  },
+}), { pureComponent: typeof React.PureComponent !== 'undefined' })(DayPickerNavigation);

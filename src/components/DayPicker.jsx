@@ -29,7 +29,6 @@ import ModifiersShape from '../shapes/ModifiersShape';
 import ScrollableOrientationShape from '../shapes/ScrollableOrientationShape';
 import DayOfWeekShape from '../shapes/DayOfWeekShape';
 import CalendarInfoPositionShape from '../shapes/CalendarInfoPositionShape';
-import BaseClass, { pureComponentAvailable } from '../utils/baseClass';
 
 import startOfWeek from 'date-fns/startOfWeek';
 import endOfWeek from 'date-fns/endOfWeek';
@@ -89,6 +88,8 @@ const propTypes = forbidExtraProps({
   horizontalMonthPadding: nonNegativeInteger,
 
   // navigation props
+  disablePrev: PropTypes.bool,
+  disableNext: PropTypes.bool,
   navPrev: PropTypes.node,
   navNext: PropTypes.node,
   noNavButtons: PropTypes.bool,
@@ -115,6 +116,8 @@ const propTypes = forbidExtraProps({
   getFirstFocusableDay: PropTypes.func,
   onBlur: PropTypes.func,
   showKeyboardShortcuts: PropTypes.bool,
+  onTab: PropTypes.func,
+  onShiftTab: PropTypes.func,
 
   // internationalization
   monthFormat: PropTypes.string,
@@ -146,6 +149,8 @@ export const defaultProps = {
   horizontalMonthPadding: 13,
 
   // navigation props
+  disablePrev: false,
+  disableNext: false,
   navPrev: null,
   navNext: null,
   noNavButtons: false,
@@ -172,6 +177,8 @@ export const defaultProps = {
   getFirstFocusableDay: null,
   onBlur() {},
   showKeyboardShortcuts: false,
+  onTab() {},
+  onShiftTab() {},
 
   // internationalization
   monthFormat: 'MMMM yyyy',
@@ -182,7 +189,7 @@ export const defaultProps = {
 };
 
 /** @extends React.Component */
-class DayPicker extends BaseClass {
+class DayPicker extends React.PureComponent {
   constructor(props) {
     super(props);
 
@@ -375,7 +382,12 @@ class DayPicker extends BaseClass {
   onFinalKeyDown(e) {
     this.setState({ withMouseInteractions: false });
 
-    const { onBlur, isRTL } = this.props;
+    const {
+      onBlur,
+      onTab,
+      onShiftTab,
+      isRTL,
+    } = this.props;
     const { focusedDate, showKeyboardShortcuts } = this.state;
     if (!focusedDate) return;
 
@@ -415,7 +427,6 @@ class DayPicker extends BaseClass {
         newFocusedDate = subMonths(newFocusedDate, 1);
         didTransitionMonth = this.maybeTransitionPrevMonth(newFocusedDate);
         break;
-
       case 'ArrowDown':
         e.preventDefault();
         newFocusedDate = addWeeks(newFocusedDate, 1);
@@ -440,11 +451,9 @@ class DayPicker extends BaseClass {
         newFocusedDate = addMonths(newFocusedDate, 1);
         didTransitionMonth = this.maybeTransitionNextMonth(newFocusedDate);
         break;
-
       case '?':
         this.openKeyboardShortcutsPanel(onKeyboardShortcutsPanelClose);
         break;
-
       case 'Escape':
         if (showKeyboardShortcuts) {
           this.closeKeyboardShortcutsPanel();
@@ -452,7 +461,13 @@ class DayPicker extends BaseClass {
           onBlur();
         }
         break;
-
+      case 'Tab':
+        if (e.shiftKey) {
+          onShiftTab();
+        } else {
+          onTab();
+        }
+        break;
       default:
         break;
     }
@@ -807,6 +822,8 @@ class DayPicker extends BaseClass {
 
   renderNavigation() {
     const {
+      disablePrev,
+      disableNext,
       navPrev,
       navNext,
       noNavButtons,
@@ -825,6 +842,8 @@ class DayPicker extends BaseClass {
 
     return (
       <DayPickerNavigation
+        disablePrev={disablePrev}
+        disableNext={disableNext}
         onPrevMonthClick={this.onPrevMonthClick}
         onNextMonthClick={onNextMonthClick}
         navPrev={navPrev}
@@ -1262,4 +1281,4 @@ export default withStyles(({
       },
     }),
   },
-}), { pureComponent: pureComponentAvailable })(DayPicker);
+}), { pureComponent: typeof React.PureComponent !== 'undefined' })(DayPicker);

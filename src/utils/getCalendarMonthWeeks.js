@@ -21,7 +21,7 @@ export default function getCalendarMonthWeeks(
     throw new TypeError('`month` must be a valid Date object');
   }
   const firstDayOfWeek = firstDayOfWeekParam != null
-    ? firstDayOfWeekParam : localeData.option.weekStartsOn;
+    ? firstDayOfWeekParam : localeData.options.weekStartsOn;
   if (WEEKDAYS.indexOf(firstDayOfWeek) === -1) {
     throw new TypeError('`firstDayOfWeek` must be an integer between 0 and 6');
   }

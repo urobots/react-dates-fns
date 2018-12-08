@@ -21,6 +21,8 @@ const propTypes = forbidExtraProps({
   startDateOffset: PropTypes.func,
   endDateOffset: PropTypes.func,
   showInputs: PropTypes.bool,
+  minDate: PropTypes.object,
+  maxDate: PropTypes.object,
 
   keepOpenOnDateSelect: PropTypes.bool,
   minimumNights: PropTypes.number,
@@ -63,6 +65,8 @@ const defaultProps = {
   startDateOffset: undefined,
   endDateOffset: undefined,
   showInputs: false,
+  minDate: null,
+  maxDate: null,
 
   // day presentation and interaction related props
   renderCalendarDay: undefined,

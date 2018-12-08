@@ -38,10 +38,10 @@ export default function getCalendarDaySettings(day, ariaLabelFormat, daySize, mo
   const formattedDate = { date: format(day, ariaLabelFormat) };
 
   let ariaLabel = getPhrase(chooseAvailableDate, formattedDate);
-  if (modifiers.has(BLOCKED_MODIFIER)) {
-    ariaLabel = getPhrase(dateIsUnavailable, formattedDate);
-  } else if (selected) {
+  if (selected) {
     ariaLabel = getPhrase(dateIsSelected, formattedDate);
+  } else if (modifiers.has(BLOCKED_MODIFIER)) {
+    ariaLabel = getPhrase(dateIsUnavailable, formattedDate);
   }
 
   return {

@@ -20,7 +20,6 @@ import isSameMonthAndYear from '../utils/isSameMonthAndYear';
 import ModifiersShape from '../shapes/ModifiersShape';
 import ScrollableOrientationShape from '../shapes/ScrollableOrientationShape';
 import DayOfWeekShape from '../shapes/DayOfWeekShape';
-import BaseClass, { pureComponentAvailable } from '../utils/baseClass';
 
 import subMonths from 'date-fns/subMonths';
 import addMonths from 'date-fns/addMonths';
@@ -121,7 +120,7 @@ function getMonths(initialMonth, numberOfMonths, withoutTransitionMonths) {
 }
 
 /** @extends React.Component */
-class CalendarMonthGrid extends BaseClass {
+class CalendarMonthGrid extends React.PureComponent {
   constructor(props) {
     super(props);
     const withoutTransitionMonths = props.orientation === VERTICAL_SCROLLABLE;
@@ -425,4 +424,4 @@ export default withStyles(({
   CalendarMonthGrid_month__hidden: {
     visibility: 'hidden',
   },
-}), { pureComponent: pureComponentAvailable })(CalendarMonthGrid);
+}), { pureComponent: typeof React.PureComponent !== 'undefined' })(CalendarMonthGrid);
