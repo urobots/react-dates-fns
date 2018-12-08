@@ -8,7 +8,8 @@ For examples of the datepicker in action, go to http://airbnb.io/react-dates.
 
 To use a locale, you need to pass one of the date-fns supported languages like this:
 
-`<DateRangePickerWrapper
+```
+<DateRangePickerWrapper
     showClearDates
     startDatePlaceholderText="入住日期"
     endDatePlaceholderText="退房日期"
@@ -18,4 +19,5 @@ To use a locale, you need to pass one of the date-fns supported languages like t
         clearDates: '清除日期',
     }}
     locale="zh-CN"
-/>`
+/>
+```
