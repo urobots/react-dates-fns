@@ -31,6 +31,7 @@ import addDays from 'date-fns/addDays';
 import subDays from 'date-fns/subDays';
 import addHours from 'date-fns/addHours';
 import isSameDay from 'date-fns/isSameDay';
+import parseISO from 'date-fns/parseISO';
 
 import {
   HORIZONTAL_ORIENTATION,
@@ -280,7 +281,7 @@ export default class DayPickerSingleDateController extends React.PureComponent {
     if (didFocusChange || recomputePropModifiers) {
       values(visibleDays).forEach((days) => {
         Object.keys(days).forEach((day) => {
-          const dateObj = addHours(startOfDay(day), 12);
+          const dateObj = addHours(startOfDay(parseISO(day)), 12);
           if (this.isBlocked(dateObj)) {
             modifiers = this.addModifier(modifiers, dateObj, 'blocked');
           } else {

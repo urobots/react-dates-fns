@@ -19,6 +19,7 @@ import getLocale from '../utils/getLocale';
 
 import format from 'date-fns/format';
 import toDate from 'date-fns/toDate';
+import parseISO from 'date-fns/parseISO';
 import addDays from 'date-fns/addDays';
 import addHours from 'date-fns/addHours';
 import startOfDay from 'date-fns/startOfDay';
@@ -170,7 +171,7 @@ export default class DateRangePickerInputController extends React.PureComponent 
       onDatesChange,
     } = this.props;
 
-    const endDate = toDate(format(new Date(endDateString), this.getDisplayFormat()));
+    const endDate = new Date(endDateString);
 
     const isEndDateValid = endDate
       && !isOutsideRange(endDate)
@@ -214,7 +215,7 @@ export default class DateRangePickerInputController extends React.PureComponent 
       disabled,
     } = this.props;
 
-    const startDate = toDate(format(new Date(startDateString), this.getDisplayFormat()));
+    const startDate = new Date(startDateString);
     const isEndDateBeforeStartDate = startDate
       && isBeforeDay(endDate, addDays(startDate, minimumNights));
     const isStartDateValid = startDate

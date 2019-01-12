@@ -40,6 +40,7 @@ import isWithinInterval from  'date-fns/isWithinInterval';
 import isDate from 'date-fns/isDate';
 import addHours from 'date-fns/addHours';
 import isSameDay from 'date-fns/isSameDay';
+import parseISO from 'date-fns/parseISO';
 
 import {
   START_DATE,
@@ -400,7 +401,7 @@ export default class DayPickerRangeController extends React.PureComponent {
     if (didFocusChange || recomputePropModifiers) {
       values(visibleDays).forEach((days) => {
         Object.keys(days).forEach((day) => {
-          const dateObj = addHours(startOfDay(day), 12);
+          const dateObj = addHours(startOfDay(parseISO(day)), 12);
           let isBlocked = false;
 
           if (didFocusChange || recomputeOutsideRange) {
@@ -1016,7 +1017,7 @@ export default class DayPickerRangeController extends React.PureComponent {
     if (focusedInput !== END_DATE) return false;
 
     if (startDate) {
-      const dayDiff = addHours(startOfDay(startDate), 12);
+      const dayDiff = addHours(startOfDay(parseISO(startDate)), 12);
       return dayDiff < minimumNights && dayDiff >= 0;
     }
     return isOutsideRange(subDays(day, minimumNights));

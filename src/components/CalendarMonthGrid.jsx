@@ -6,6 +6,7 @@ import { addEventListener } from 'consolidated-events';
 
 import { CalendarDayPhrases } from '../defaultPhrases';
 import getPhrasePropTypes from '../utils/getPhrasePropTypes';
+import noflip from '../utils/noflip';
 
 import CalendarMonth from './CalendarMonth';
 
@@ -379,7 +380,7 @@ export default withStyles(({
 }) => ({
   CalendarMonthGrid: {
     background: color.background,
-    textAlign: 'left',
+    textAlign: noflip('left'),
     zIndex,
   },
 
@@ -389,7 +390,7 @@ export default withStyles(({
 
   CalendarMonthGrid__horizontal: {
     position: 'absolute',
-    left: spacing.dayPickerHorizontalPadding,
+    left: noflip(spacing.dayPickerHorizontalPadding),
   },
 
   CalendarMonthGrid__vertical: {

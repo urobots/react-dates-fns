@@ -6,7 +6,31 @@
 
 For examples of the datepicker in action, go to http://airbnb.io/react-dates.
 
-To use a locale, you need to pass one of the date-fns supported languages like this:
+To use a locale:
+
+Add date-fns supported languages to utils/getLocale.js
+
+```
+import enUS from 'date-fns/locale/en-US';
+import ptBR from 'date-fns/locale/pt-BR';
+import zhCN from 'date-fns/locale/zh-CN';
+
+export default function getLocale(locale) {
+  switch (locale) {
+    case 'en-US':
+      return enUS;
+    case 'pt-BR':
+      return ptBR;
+    case 'zh-CN':
+      return zhCN;
+    default:
+      return enUS;
+  }
+}
+```
+
+
+Pass the locale to component like this:
 
 ```
 <DateRangePickerWrapper

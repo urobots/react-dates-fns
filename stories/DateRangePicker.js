@@ -1,9 +1,11 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
 import { withInfo } from '@storybook/addon-info';
+import DirectionProvider, { DIRECTIONS } from 'react-with-direction/dist/DirectionProvider';
 
 import {
   VERTICAL_ORIENTATION,
+  ANCHOR_RIGHT,
 } from '../src/constants';
 
 import DateRangePickerWrapper from '../examples/DateRangePickerWrapper';
@@ -84,6 +86,18 @@ storiesOf('DateRangePicker (DRP)', module)
     <DateRangePickerWrapper
       locale="pt-BR"
     />
+  )))
+  .add('with DirectionProvider', withInfo()(() => (
+    <DirectionProvider direction={DIRECTIONS.RTL}>
+      <DateRangePickerWrapper
+        startDatePlaceholderText="تاریخ شروع"
+        endDatePlaceholderText="تاریخ پایان"
+        anchorDirection={ANCHOR_RIGHT}
+        showDefaultInputIcon
+        showClearDates
+        isRTL
+      />
+    </DirectionProvider>
   )))
   .add('vertical with custom height', withInfo()(() => (
     <DateRangePickerWrapper

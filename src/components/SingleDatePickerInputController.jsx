@@ -133,7 +133,7 @@ export default class SingleDatePickerInputController extends React.PureComponent
       onFocusChange,
       onClose,
     } = this.props;
-    const newDate = toDate(format(new Date(dateString), this.getDisplayFormat()));
+    const newDate = new Date(dateString);
 
     const isValid = newDate && !isOutsideRange(newDate);
     if (isValid) {
