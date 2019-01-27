@@ -26,6 +26,8 @@ import subMonths from 'date-fns/subMonths';
 import addMonths from 'date-fns/addMonths';
 import addHours from 'date-fns/addHours';
 import startOfDay from 'date-fns/startOfDay';
+import setYear from 'date-fns/setYear';
+import setMonth from 'date-fns/setMonth';
 
 import {
   HORIZONTAL_ORIENTATION,
