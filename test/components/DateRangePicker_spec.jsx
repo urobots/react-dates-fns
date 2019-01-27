@@ -571,6 +571,36 @@ describe('DateRangePicker', () => {
     });
   });
 
+  it('tabbing out with keyboard behaves as an outside click', () => {
+    const target = sinon.stub();
+    const onOutsideClick = sinon.stub();
+    const dayPickerContainer = {
+      addEventListener: sinon.stub(),
+      contains: sinon.stub().returns(false),
+    };
+    const wrapper = shallow((<DateRangePicker {...requiredProps} />)).dive();
+    wrapper.instance().setDayPickerContainerRef(dayPickerContainer);
+    wrapper.instance().onOutsideClick = onOutsideClick;
+    expect(onOutsideClick.callCount).to.equal(0);
+    wrapper.instance().onDayPickerFocusOut({ key: 'Tab', shiftKey: false, target });
+    expect(onOutsideClick.callCount).to.equal(1);
+  });
+
+
+  it('tabbing within itself does not behave as an outside click', () => {
+    const target = sinon.stub();
+    const onOutsideClick = sinon.stub();
+    const dayPickerContainer = {
+      addEventListener: sinon.stub(),
+      contains: sinon.stub().returns(true),
+    };
+    const wrapper = shallow((<DateRangePicker {...requiredProps} />)).dive();
+    wrapper.instance().setDayPickerContainerRef(dayPickerContainer);
+    wrapper.instance().onOutsideClick = onOutsideClick;
+    wrapper.instance().onDayPickerFocusOut({ key: 'Tab', shiftKey: false, target });
+    expect(onOutsideClick.callCount).to.equal(0);
+  });
+
   describe('#showKeyboardShortcutsPanel', () => {
     it('sets state.isDateRangePickerInputFocused to false', () => {
       const wrapper = shallow((

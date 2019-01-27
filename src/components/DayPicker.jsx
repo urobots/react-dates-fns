@@ -375,6 +375,7 @@ class DayPicker extends React.PureComponent {
 
   onKeyDown(e) {
     e.stopPropagation();
+
     if (!MODIFIER_KEY_NAMES.has(e.key)) {
       this.throttledKeyDown(e);
     }
@@ -459,14 +460,14 @@ class DayPicker extends React.PureComponent {
         if (showKeyboardShortcuts) {
           this.closeKeyboardShortcutsPanel();
         } else {
-          onBlur();
+          onBlur(e);
         }
         break;
       case 'Tab':
         if (e.shiftKey) {
           onShiftTab();
         } else {
-          onTab();
+          onTab(e);
         }
         break;
       default:
@@ -1135,7 +1136,6 @@ class DayPicker extends React.PureComponent {
                 />
               )}
             </div>
-
           </div>
 
           {(calendarInfoPositionBottom || calendarInfoPositionAfter) && calendarInfo}

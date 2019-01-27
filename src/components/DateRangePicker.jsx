@@ -138,6 +138,7 @@ class DateRangePicker extends React.PureComponent {
     this.onOutsideClick = this.onOutsideClick.bind(this);
     this.onDateRangePickerInputFocus = this.onDateRangePickerInputFocus.bind(this);
     this.onDayPickerFocus = this.onDayPickerFocus.bind(this);
+    this.onDayPickerFocusOut = this.onDayPickerFocusOut.bind(this);
     this.onDayPickerBlur = this.onDayPickerBlur.bind(this);
     this.showKeyboardShortcutsPanel = this.showKeyboardShortcutsPanel.bind(this);
 
@@ -181,6 +182,7 @@ class DateRangePicker extends React.PureComponent {
   }
 
   componentWillUnmount() {
+    this.removeDayPickerEventListeners();
     if (this.removeEventListener) this.removeEventListener();
     if (this.enableScroll) this.enableScroll();
   }
@@ -193,6 +195,7 @@ class DateRangePicker extends React.PureComponent {
       endDate,
       appendToBody,
     } = this.props;
+
     if (!this.isOpened()) return;
     if (appendToBody && this.dayPickerContainer.contains(event.target)) return;
 
@@ -242,6 +245,17 @@ class DateRangePicker extends React.PureComponent {
     });
   }
 
+  onDayPickerFocusOut(event) {
+    // In cases where **relatedTarget** is not null, it points to the right
+    // element here. However, in cases where it is null (such as clicking on a
+    // specific day), the appropriate value is **event.target**.
+    //
+    // We handle both situations here by using the ` || ` operator to fallback
+    // to *event.target** when **relatedTarget** is not provided.
+    if (this.dayPickerContainer.contains(event.relatedTarget || event.target)) return;
+    this.onOutsideClick(event);
+  }
+
   onDayPickerBlur() {
     this.setState({
       isDateRangePickerInputFocused: true,
@@ -251,11 +265,35 @@ class DateRangePicker extends React.PureComponent {
   }
 
   setDayPickerContainerRef(ref) {
+    if (ref === this.dayPickerContainer) return;
+    if (this.dayPickerContainer) this.removeDayPickerEventListeners();
+
     this.dayPickerContainer = ref;
+    if (!ref) return;
+
+    this.addDayPickerEventListeners();
   }
 
   setContainerRef(ref) {
     this.container = ref;
+  }
+
+  addDayPickerEventListeners() {
+    // NOTE: We are using a manual event listener here, because React doesn't
+    // provide FocusOut, while blur and keydown don't provide the information
+    // needed in order to know whether we have left focus or not.
+    //
+    // For reference, this issue is further described here:
+    // - https://github.com/facebook/react/issues/6410
+    this.removeDayPickerFocusOut = addEventListener(
+      this.dayPickerContainer,
+      'focusout',
+      this.onDayPickerFocusOut,
+    );
+  }
+
+  removeDayPickerEventListeners() {
+    if (this.removeDayPickerFocusOut) this.removeDayPickerFocusOut();
   }
 
   isOpened() {
@@ -395,6 +433,7 @@ class DateRangePicker extends React.PureComponent {
       disabled,
       theme: { reactDates }
     } = this.props;
+
     const { dayPickerContainerStyles, isDayPickerFocused, showKeyboardShortcuts } = this.state;
 
     const onOutsideClick = (!withFullScreenPortal && withPortal)
@@ -580,7 +619,9 @@ class DateRangePicker extends React.PureComponent {
         regular={regular}
         verticalSpacing={verticalSpacing}
         locale={locale}
-      />
+        >
+          {this.maybeRenderDayPickerWithPortal()}
+        </DateRangePickerInputController>
     );
 
     return (
@@ -594,11 +635,9 @@ class DateRangePicker extends React.PureComponent {
         {enableOutsideClick && (
           <OutsideClickHandler onOutsideClick={this.onOutsideClick}>
             {input}
-            {this.maybeRenderDayPickerWithPortal()}
           </OutsideClickHandler>
         )}
-        {!enableOutsideClick && input}
-        {!enableOutsideClick && this.maybeRenderDayPickerWithPortal()}
+        {enableOutsideClick || input}
       </div>
     );
   }

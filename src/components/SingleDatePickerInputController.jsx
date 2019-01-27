@@ -27,6 +27,8 @@ import {
 } from '../constants';
 
 const propTypes = forbidExtraProps({
+  children: PropTypes.node,
+
   date: PropTypes.object,
   onDateChange: PropTypes.func.isRequired,
 
@@ -73,6 +75,8 @@ const propTypes = forbidExtraProps({
 });
 
 const defaultProps = {
+  children: null,
+
   date: null,
   focused: false,
 
@@ -194,6 +198,7 @@ export default class SingleDatePickerInputController extends React.PureComponent
 
   render() {
     const {
+      children,
       id,
       placeholder,
       disabled,
@@ -244,7 +249,6 @@ export default class SingleDatePickerInputController extends React.PureComponent
         onChange={this.onChange}
         onFocus={this.onFocus}
         onKeyDownShiftTab={this.onClearFocus}
-        onKeyDownTab={this.onClearFocus}
         onKeyDownArrowDown={onKeyDownArrowDown}
         onKeyDownQuestionMark={onKeyDownQuestionMark}
         screenReaderMessage={screenReaderMessage}
@@ -255,7 +259,9 @@ export default class SingleDatePickerInputController extends React.PureComponent
         small={small}
         regular={regular}
         verticalSpacing={verticalSpacing}
-      />
+      >
+        {children}
+      </SingleDatePickerInput>
     );
   }
 }
