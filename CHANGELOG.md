@@ -3,6 +3,9 @@
 <!--
 - []  ([#](https://github.com/airbnb/react-dates/pull/))
 -->
+## 18.4.2
+- [fix] Change version to follow semantic versioning
+
 ## 18.4.1.1
 - [fix] Add `setYear` and `setMonth` import to CalendarMonthGrid component
 
