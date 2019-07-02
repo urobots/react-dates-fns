@@ -7,7 +7,7 @@ import getLocale from './getLocale';
 import { DISPLAY_FORMAT } from '../constants';
 
 export default function toLocalizedDateString(date, currentFormat, locale) {
-  if (!date || date === null) {
+  if (!date) {
     return null;
   }
   const dateObj = isDate(date) ? date : format(date, currentFormat);
