@@ -723,7 +723,7 @@ describe('DateRangePickerInputController', () => {
     });
 
     describe('is outside range', () => {
-      const futureDate = toISOString(addDays(new Date(), 7).toISOString();
+      const futureDate = toISOString(addDays(new Date(), 7)).toISOString();
       const isOutsideRange = day => day > addDays(new Date(), 5);
 
       it('calls props.onDatesChange', () => {
