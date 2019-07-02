@@ -15,6 +15,7 @@ import { VERTICAL_SCROLLABLE } from '../../src/constants';
 
 import startOfDay from 'date-fns/startOfDay';
 import startOfWeek from 'date-fns/startOfWeek';
+import startOfMonth from 'date-fns/startOfMonth';
 import endOfWeek from 'date-fns/endOfWeek';
 import addHours from 'date-fns/addHours';
 import addDays from 'date-fns/addDays';
@@ -118,12 +119,12 @@ describe('DayPickerSingleDateController', () => {
           const numVisibleDays = 3;
           let visibleDays;
           beforeEach(() => {
-            const startOfMonth = startOfMonth(today);
+            const monthStart = startOfMonth(today);
             visibleDays = {
-              [toISOMonthString(startOfMonth)]: {
-                [toISODateString(startOfMonth)]: [],
-                [toISODateString(addDays(startOfMonth, 1))]:  [],
-                [toISODateString(addDays(startOfMonth, 2))]: [],
+              [toISOMonthString(monthStart)]: {
+                [toISODateString(monthStart)]: [],
+                [toISODateString(addDays(monthStart, 1))]:  [],
+                [toISODateString(addDays(monthStart, 2))]: [],
               },
             };
           });
@@ -201,12 +202,12 @@ describe('DayPickerSingleDateController', () => {
           const numVisibleDays = 3;
           let visibleDays;
           beforeEach(() => {
-            const startOfMonth = startOfMonth(today);
+            const monthStart = startOfMonth(today);
             visibleDays = {
-              [toISOMonthString(startOfMonth)]: {
-                [toISODateString(startOfMonth)]: [],
-                [toISODateString(addDays(startOfMonth, 1))]: [],
-                [toISODateString(addDays(startOfMonth, 2))]: [],
+              [toISOMonthString(monthStart)]: {
+                [toISODateString(monthStart)]: [],
+                [toISODateString(addDays(monthStart, 1))]: [],
+                [toISODateString(addDays(monthStart, 2))]: [],
               },
             };
           });
@@ -296,12 +297,12 @@ describe('DayPickerSingleDateController', () => {
           const numVisibleDays = 3;
           let visibleDays;
           beforeEach(() => {
-            const startOfMonth = startOfMonth(today);
+            const monthStart = startOfMonth(today);
             visibleDays = {
-              [toISOMonthString(startOfMonth)]: {
-                [toISODateString(startOfMonth)]: [],
-                [toISODateString(addDays(startOfMonth, 1))]: [],
-                [toISODateString(addDays(startOfMonth, 2))]: [],
+              [toISOMonthString(monthStart)]: {
+                [toISODateString(monthStart)]: [],
+                [toISODateString(addDays(monthStart, 1))]: [],
+                [toISODateString(addDays(monthStart, 2))]: [],
               },
             };
           });
@@ -379,12 +380,12 @@ describe('DayPickerSingleDateController', () => {
           const numVisibleDays = 3;
           let visibleDays;
           beforeEach(() => {
-            const startOfMonth = startOfMonth(today);
+            const monthStart = startOfMonth(today);
             visibleDays = {
-              [toISOMonthString(startOfMonth)]: {
-                [toISODateString(startOfMonth)]: [],
-                [toISODateString(addDays(startOfMonth, 1))]: [],
-                [toISODateString(addDays(startOfMonth, 2))]: [],
+              [toISOMonthString(monthStart)]: {
+                [toISODateString(monthStart)]: [],
+                [toISODateString(addDays(monthStart, 1))]: [],
+                [toISODateString(addDays(monthStart, 2))]: [],
               },
             };
           });
