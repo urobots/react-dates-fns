@@ -988,8 +988,8 @@ describe('DayPickerRangeController', () => {
             visibleDays = {
               [toISOMonthString(startOfMonth)]: {
                 [toISODateString(startOfMonth)]: [],
-                [toISODateString(addDays(startOfMonth, 1)]: [],
-                [toISODateString(addDays(startOfMonth, 2)]: [],
+                [toISODateString(addDays(startOfMonth, 1))]: [],
+                [toISODateString(addDays(startOfMonth, 2))]: [],
               },
             };
           });

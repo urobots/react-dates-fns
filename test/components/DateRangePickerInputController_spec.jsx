@@ -480,7 +480,7 @@ describe('DateRangePickerInputController', () => {
 
   describe('#onStartDateChange', () => {
     describe('is a valid start date', () => {
-      const validFutureDateString = format(addDays(today, 5). 'yyyy-MM-dd');
+      const validFutureDateString = format(addDays(today, 5), 'yyyy-MM-dd');
       describe('is before props.endDate', () => {
         const endDate = addDays(today, 10);
         it('calls props.onDatesChange provided start date and props.endDate', () => {
