@@ -53,6 +53,10 @@ const defaultProps = {
   // input related props
   startDatePlaceholderText: 'Start Date',
   endDatePlaceholderText: 'End Date',
+  startDateAriaLabel: undefined,
+  endDateAriaLabel: undefined,
+  startDateOffset: undefined,
+  endDateOffset: undefined,
   disabled: false,
   required: false,
   readOnly: false,
@@ -248,11 +252,14 @@ class DateRangePicker extends React.PureComponent {
   onDayPickerFocusOut(event) {
     // In cases where **relatedTarget** is not null, it points to the right
     // element here. However, in cases where it is null (such as clicking on a
-    // specific day), the appropriate value is **event.target**.
+    // specific day) or it is **document.body** (IE11), the appropriate value is **event.target**.
     //
     // We handle both situations here by using the ` || ` operator to fallback
     // to *event.target** when **relatedTarget** is not provided.
-    if (this.dayPickerContainer.contains(event.relatedTarget || event.target)) return;
+    const relatedTarget = event.relatedTarget === document.body
+      ? event.target
+      : (event.relatedTarget || event.target);
+    if (this.dayPickerContainer.contains(relatedTarget)) return;
     this.onOutsideClick(event);
   }
 
@@ -406,7 +413,9 @@ class DateRangePicker extends React.PureComponent {
       enableOutsideDays,
       focusedInput,
       startDate,
+      startDateOffset,
       endDate,
+      endDateOffset,
       minimumNights,
       keepOpenOnDateSelect,
       renderCalendarDay,
@@ -483,7 +492,9 @@ class DateRangePicker extends React.PureComponent {
           onClose={onClose}
           focusedInput={focusedInput}
           startDate={startDate}
+          startDateOffset={startDateOffset}
           endDate={endDate}
+          endDateOffset={endDateOffset}
           monthFormat={monthFormat}
           renderMonthText={renderMonthText}
           withPortal={withAnyPortal}
@@ -536,9 +547,11 @@ class DateRangePicker extends React.PureComponent {
       startDate,
       startDateId,
       startDatePlaceholderText,
+      startDateAriaLabel,
       endDate,
       endDateId,
       endDatePlaceholderText,
+      endDateAriaLabel,
       focusedInput,
       screenReaderInputMessage,
       showClearDates,
@@ -583,10 +596,12 @@ class DateRangePicker extends React.PureComponent {
         startDateId={startDateId}
         startDatePlaceholderText={startDatePlaceholderText}
         isStartDateFocused={focusedInput === START_DATE}
+        startDateAriaLabel={startDateAriaLabel}
         endDate={endDate}
         endDateId={endDateId}
         endDatePlaceholderText={endDatePlaceholderText}
         isEndDateFocused={focusedInput === END_DATE}
+        endDateAriaLabel={endDateAriaLabel}
         displayFormat={displayFormat}
         showClearDates={showClearDates}
         showCaret={!withPortal && !withFullScreenPortal && !hideFang}

@@ -20,8 +20,8 @@ import {
 const describeIfWindow = typeof document === 'undefined' ? describe.skip : describe;
 
 const requiredProps = {
-  onDatesChange: () => {},
-  onFocusChange: () => {},
+  onDatesChange: () => { },
+  onFocusChange: () => { },
   startDateId: 'startDate',
   endDateId: 'endDate',
 };
@@ -524,7 +524,7 @@ describe('DateRangePicker', () => {
     });
   });
 
-  describe('#onDayPickerBlur', () => {
+  describeIfWindow('#onDayPickerBlur', () => {
     it('sets state.isDateRangePickerInputFocused to true', () => {
       const wrapper = shallow((
         <DateRangePicker
@@ -651,7 +651,7 @@ describe('DateRangePicker', () => {
   describe('initialVisibleMonth', () => {
     describe('initialVisibleMonth is passed in', () => {
       it('DayPickerRangeController.props.initialVisibleMonth is equal to initialVisibleMonth', () => {
-        const initialVisibleMonth = () => {};
+        const initialVisibleMonth = () => { };
         const wrapper = shallow((
           <DateRangePicker
             {...requiredProps}
@@ -698,6 +698,48 @@ describe('DateRangePicker', () => {
         )).dive();
         const dayPicker = wrapper.find(DayPickerRangeController);
         expect(isSameDay(dayPicker.props().initialVisibleMonth(), today)).to.equal(true);
+      });
+    });
+
+    describe('dateOffsets', () => {
+      describe('startDateOffset is passed in', () => {
+        it('Should pass startDateOffset to DayPickerRangeController', () => {
+          const startDate = moment('2018-10-17');
+          const onDatesChangeStub = sinon.stub();
+          const wrapper = shallow((
+            <DateRangePicker
+              {...requiredProps}
+              startDateOffset={date => date.subtract(5, 'days')}
+              onDatesChange={onDatesChangeStub}
+              focusedInput={START_DATE}
+            />
+          )).dive();
+
+          const dayPicker = wrapper.find(DayPickerRangeController);
+          const dayPickerStartDateOffset = dayPicker.props().startDateOffset(startDate);
+
+          expect(dayPickerStartDateOffset.format()).to.equal(startDate.format());
+        });
+      });
+
+      describe('endDateOffset is passed in', () => {
+        it('Should pass endDateOffset to DayPickerRangeController', () => {
+          const endDate = moment('2018-10-17', 'YYYY-MM-DD');
+          const onDatesChangeStub = sinon.stub();
+          const wrapper = shallow((
+            <DateRangePicker
+              {...requiredProps}
+              endDateOffset={date => date.subtract(5, 'days')}
+              onDatesChange={onDatesChangeStub}
+              focusedInput={START_DATE}
+            />
+          )).dive();
+
+          const dayPicker = wrapper.find(DayPickerRangeController);
+          const dayPickerEndDateOffset = dayPicker.props().endDateOffset(endDate);
+
+          expect(dayPickerEndDateOffset.format()).to.equal(endDate.format());
+        });
       });
     });
   });

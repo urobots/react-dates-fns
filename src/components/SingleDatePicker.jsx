@@ -50,6 +50,7 @@ const defaultProps = {
   // input related props
   id: 'date',
   placeholder: 'Date',
+  ariaLabel: undefined,
   disabled: false,
   required: false,
   readOnly: false,
@@ -252,22 +253,31 @@ class SingleDatePicker extends React.PureComponent {
 
   onFocusOut(e) {
     const { onFocusChange } = this.props;
-    if (this.container.contains(e.relatedTarget || e.target)) return;
+    // In cases where **relatedTarget** is not null, it points to the right
+    // element here. However, in cases where it is null (such as clicking on a
+    // specific day) or it is **document.body** (IE11), the appropriate value is **event.target**.
+    //
+    // We handle both situations here by using the ` || ` operator to fallback
+    // to *event.target** when **relatedTarget** is not provided.
+    const relatedTarget = e.relatedTarget === document.body
+      ? e.target
+      : (e.relatedTarget || e.target);
+    if (this.dayPickerContainer.contains(relatedTarget)) return;
     onFocusChange({ focused: false });
   }
 
   setDayPickerContainerRef(ref) {
-    this.dayPickerContainer = ref;
-  }
-
-  setContainerRef(ref) {
-    if (ref === this.container) return;
+    if (ref === this.dayPickerContainer) return;
     this.removeEventListeners();
 
-    this.container = ref;
+    this.dayPickerContainer = ref;
     if (!ref) return;
 
     this.addEventListeners();
+  }
+
+  setContainerRef(ref) {
+    this.container = ref;
   }
 
   addEventListeners() {
@@ -275,7 +285,7 @@ class SingleDatePicker extends React.PureComponent {
     // Keep an eye on https://github.com/facebook/react/issues/6410 for updates
     // We use "blur w/ useCapture param" vs "onfocusout" for FF browser support
     this.removeFocusOutEventListener = addEventListener(
-      this.container,
+      this.dayPickerContainer,
       'focusout',
       this.onFocusOut,
     );
@@ -311,6 +321,7 @@ class SingleDatePicker extends React.PureComponent {
       appendToBody,
       focused,
     } = this.props;
+
     const { dayPickerContainerStyles } = this.state;
 
     if (!focused) {
@@ -517,6 +528,7 @@ class SingleDatePicker extends React.PureComponent {
     const {
       id,
       placeholder,
+      ariaLabel,
       disabled,
       focused,
       required,
@@ -557,6 +569,7 @@ class SingleDatePicker extends React.PureComponent {
       <SingleDatePickerInputController
         id={id}
         placeholder={placeholder}
+        ariaLabel={ariaLabel}
         focused={focused}
         isFocused={isInputFocused}
         disabled={disabled}

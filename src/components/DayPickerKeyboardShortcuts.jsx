@@ -22,6 +22,7 @@ const propTypes = forbidExtraProps({
   openKeyboardShortcutsPanel: PropTypes.func,
   closeKeyboardShortcutsPanel: PropTypes.func,
   phrases: PropTypes.shape(getPhrasePropTypes(DayPickerKeyboardShortcutsPhrases)),
+  renderKeyboardShortcutsButton: undefined,
 });
 
 const defaultProps = {
@@ -165,6 +166,7 @@ class DayPickerKeyboardShortcuts extends React.PureComponent {
       closeKeyboardShortcutsPanel,
       styles,
       phrases,
+      renderKeyboardShortcutsButton,
     } = this.props;
 
     const toggleButtonText = showKeyboardShortcutsPanel
@@ -177,6 +179,14 @@ class DayPickerKeyboardShortcuts extends React.PureComponent {
 
     return (
       <div>
+      {renderKeyboardShortcutsButton
+        && renderKeyboardShortcutsButton({
+          // passing in context-specific props
+          ref: this.setShowKeyboardShortcutsButtonRef,
+          onClick: this.onShowKeyboardShortcutsButtonClick,
+          ariaLabel: toggleButtonText,
+        })}
+        {renderKeyboardShortcutsButton || (
         <button
           ref={this.setShowKeyboardShortcutsButtonRef}
           {...css(
@@ -194,16 +204,17 @@ class DayPickerKeyboardShortcuts extends React.PureComponent {
           }}
         >
           <span
-            {...css(
-              styles.DayPickerKeyboardShortcuts_showSpan,
-              bottomRight && styles.DayPickerKeyboardShortcuts_showSpan__bottomRight,
-              topRight && styles.DayPickerKeyboardShortcuts_showSpan__topRight,
-              topLeft && styles.DayPickerKeyboardShortcuts_showSpan__topLeft,
-            )}
-          >
+          {...css(
+            styles.DayPickerKeyboardShortcuts_showSpan,
+            bottomRight && styles.DayPickerKeyboardShortcuts_showSpan__bottomRight,
+            topRight && styles.DayPickerKeyboardShortcuts_showSpan__topRight,
+            topLeft && styles.DayPickerKeyboardShortcuts_showSpan__topLeft,
+          )}
+        >
             ?
-          </span>
-        </button>
+            </span>
+            </button>
+        )}
 
         {showKeyboardShortcutsPanel && (
           <div
