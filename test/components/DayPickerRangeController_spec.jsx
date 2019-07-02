@@ -4417,7 +4417,7 @@ describe('DayPickerRangeController', () => {
       it('returns true if 6 days after firstDayOfWeek prop', () => {
         const firstDayOfWeek = 3;
         const wrapper = shallow(<DayPickerRangeController firstDayOfWeek={firstDayOfWeek} />);
-        expect(wrapper.instance().isLastDayOfWeek(addDays(addDays(setDay(new Date(), firstDayOfWeek), 6))).to.equal(true);
+        expect(wrapper.instance().isLastDayOfWeek(addDays(setDay(new Date(), firstDayOfWeek), 6))).to.equal(true);
       });
 
       it('returns false if not last of week', () => {

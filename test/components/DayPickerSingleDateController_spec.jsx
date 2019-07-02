@@ -651,7 +651,7 @@ describe('DayPickerSingleDateController', () => {
           hoverDate: today,
         });
         deleteModifierSpy.resetHistory();
-        wrapper.instance().onDayMouseEnter(addDays(new Date(), 10);
+        wrapper.instance().onDayMouseEnter(addDays(new Date(), 10));
         expect(deleteModifierSpy.callCount).to.equal(1);
         expect(deleteModifierSpy.getCall(0).args[1]).to.equal(today);
         expect(deleteModifierSpy.getCall(0).args[2]).to.equal('hovered');
