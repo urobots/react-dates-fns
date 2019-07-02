@@ -35,7 +35,6 @@ import startOfWeek from 'date-fns/startOfWeek';
 import endOfWeek from 'date-fns/endOfWeek';
 import startOfMonth from 'date-fns/startOfMonth';
 import getMonth from 'date-fns/getMonth';
-import getDay from 'date-fns/getDay';
 import setDay from 'date-fns/setDay';
 import addDays from 'date-fns/addDays';
 import subDays from 'date-fns/subDays';

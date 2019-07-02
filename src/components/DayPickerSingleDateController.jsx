@@ -28,7 +28,6 @@ import endOfWeek from 'date-fns/endOfWeek';
 import addMonths from 'date-fns/addMonths';
 import subMonths from 'date-fns/subMonths';
 import addDays from 'date-fns/addDays';
-import subDays from 'date-fns/subDays';
 import addHours from 'date-fns/addHours';
 import isSameDay from 'date-fns/isSameDay';
 import parseISO from 'date-fns/parseISO';
@@ -333,7 +332,7 @@ export default class DayPickerSingleDateController extends React.PureComponent {
   }
 
   componentWillUpdate() {
-    const today = addHours(startOfDay(new Date()), 12);
+    // const today = addHours(startOfDay(new Date()), 12);
   }
 
   onDayClick(day, e) {

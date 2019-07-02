@@ -89,8 +89,7 @@ const defaultProps = {
   // internationalization
   displayFormat: () => 'P',
   monthFormat: 'MMMM yyyy',
-  phrases: DateRangePickerPhrases,
-  locale: null
+  phrases: DateRangePickerPhrases
 };
 
 class DateRangePickerWrapper extends React.Component {

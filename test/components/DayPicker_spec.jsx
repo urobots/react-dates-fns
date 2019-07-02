@@ -242,7 +242,7 @@ describe('DayPicker', () => {
         });
 
         it('arg is beginning of focusedDate week', () => {
-          const startOfWeek = startOfWeek(today);
+          const weekStart = startOfWeek(today);
           const maybeTransitionPrevMonthSpy = sinon.spy(PureDayPicker.prototype, 'maybeTransitionPrevMonth');
           const wrapper = shallow(<DayPicker />).dive();
           wrapper.setState({
@@ -250,7 +250,7 @@ describe('DayPicker', () => {
           });
           wrapper.instance().onKeyDown({ ...event, key: 'Home' });
           const arg = maybeTransitionPrevMonthSpy.getCall(0).args[0];
-          expect(isSameDay(arg, startOfWeek)).to.equal(true);
+          expect(isSameDay(arg, weekStart)).to.equal(true);
         });
       });
 
@@ -338,7 +338,7 @@ describe('DayPicker', () => {
         });
 
         it('arg is end of focusedDate week', () => {
-          const endOfWeek = endOfWeek(today);
+          const weekEnd = endOfWeek(today);
           const maybeTransitionNextMonthSpy = sinon.spy(PureDayPicker.prototype, 'maybeTransitionNextMonth');
           const wrapper = shallow(<DayPicker />).dive();
           wrapper.setState({
@@ -346,7 +346,7 @@ describe('DayPicker', () => {
           });
           wrapper.instance().onKeyDown({ ...event, key: 'End' });
           const arg = maybeTransitionNextMonthSpy.getCall(0).args[0];
-          expect(isSameDay(arg, endOfWeek)).to.equal(true);
+          expect(isSameDay(arg, weekEnd)).to.equal(true);
         });
       });
 

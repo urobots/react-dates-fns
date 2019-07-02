@@ -905,8 +905,8 @@ describe('DayPickerRangeController', () => {
             visibleDays = {
               [toISOMonthString(startOfMonth)]: {
                 [toISODateString(startOfMonth)]: [],
-                [toISODateString(addDays(startOfMonth, 1)]: [],
-                [toISODateString(addDays(startOfMonth, 2)]: [],
+                [toISODateString(addDays(startOfMonth, 1))]: [],
+                [toISODateString(addDays(startOfMonth, 2))]: [],
               },
             };
           });
@@ -4437,7 +4437,7 @@ describe('DayPickerRangeController', () => {
         expect(wrapper.find(DayPickerNavigation)).to.have.lengthOf(0);
       });
     });
-    
+
     describe('renderKeyboardShortcutsButton prop', () => {
       it('pass down custom button render function', () => {
         const testRenderKeyboardShortcutsButton = () => {};

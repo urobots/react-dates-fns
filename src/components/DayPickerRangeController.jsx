@@ -531,7 +531,7 @@ export default class DayPickerRangeController extends React.PureComponent {
       minimumNights,
       onBlur,
       focusedInput,
-      getMinNightsForHoverDate,
+      // getMinNightsForHoverDate,
       onFocusChange,
       onClose,
       onDatesChange,

@@ -17,7 +17,6 @@ import isInclusivelyAfterDay from '../utils/isInclusivelyAfterDay';
 import getLocale from '../utils/getLocale';
 
 import format from 'date-fns/format';
-import toDate from 'date-fns/toDate';
 import addHours from 'date-fns/addHours';
 import startOfDay from 'date-fns/startOfDay';
 
@@ -141,7 +140,7 @@ export default class SingleDatePickerInputController extends React.PureComponent
     } = this.props;
     const newDate = new Date(dateString);
 
-    const isValid = newDate && !isOutsideRange(newDate);
+    const isValid = !isOutsideRange(newDate);
     if (isValid) {
       onDateChange(newDate);
       if (!keepOpenOnDateSelect) {
@@ -185,7 +184,7 @@ export default class SingleDatePickerInputController extends React.PureComponent
   getDateString(date) {
     const displayFormat = this.getDisplayFormat();
     if (date && displayFormat) {
-      return date && format(date, displayFormat, {locale: getLocale(this.props.locale)});
+      return format(date, displayFormat, {locale: getLocale(this.props.locale)});
     }
     return toLocalizedDateString(date, null, this.props.locale);
   }

@@ -179,8 +179,7 @@ export default class DateRangePickerInputController extends React.PureComponent 
 
     const endDate = new Date(endDateString);
 
-    const isEndDateValid = endDate
-      && !isOutsideRange(endDate)
+    const isEndDateValid = !isOutsideRange(endDate)
       && !(startDate && isBeforeDay(endDate, addDays(startDate, minimumNights)));
     if (isEndDateValid) {
       onDatesChange({ startDate, endDate });
@@ -222,10 +221,8 @@ export default class DateRangePickerInputController extends React.PureComponent 
     } = this.props;
 
     const startDate = new Date(startDateString);
-    const isEndDateBeforeStartDate = startDate
-      && isBeforeDay(endDate, addDays(startDate, minimumNights));
-    const isStartDateValid = startDate
-      && !isOutsideRange(startDate)
+    const isEndDateBeforeStartDate = isBeforeDay(endDate, addDays(startDate, minimumNights));
+    const isStartDateValid = !isOutsideRange(startDate)
       && !(disabled === END_DATE && isEndDateBeforeStartDate);
 
     if (isStartDateValid) {
@@ -259,7 +256,7 @@ export default class DateRangePickerInputController extends React.PureComponent 
   getDateString(date) {
     const displayFormat = this.getDisplayFormat();
     if (date && displayFormat) {
-      return date && format(date, displayFormat, {locale: getLocale(this.props.locale)});
+      return format(date, displayFormat, {locale: getLocale(this.props.locale)});
     }
     return toLocalizedDateString(date, null, this.props.locale);
   }

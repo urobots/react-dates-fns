@@ -145,7 +145,7 @@ storiesOf('DayPickerSingleDateController', module)
               onChange={(e) => { onMonthSelect(month, e.target.value); }}
             >
               {getMonths().map((label, value) => (
-                <option value={value}>{label}</option>
+                <option key={value} value={value}>{label}</option>
               ))}
             </select>
           </div>
