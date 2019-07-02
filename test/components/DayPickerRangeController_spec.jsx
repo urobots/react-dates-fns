@@ -5,6 +5,7 @@ import { shallow } from 'enzyme';
 
 import startOfDay from 'date-fns/startOfDay';
 import startOfWeek from 'date-fns/startOfWeek';
+import startOfMonth from 'date-fns/startOfMonth';
 import endOfWeek from 'date-fns/endOfWeek';
 import addHours from 'date-fns/addHours';
 import addMinutes from 'date-fns/addMinutes';
@@ -15,7 +16,6 @@ import subDays from 'date-fns/subDays';
 import isSameDay from 'date-fns/isSameDay';
 import getYear from 'date-fns/getYear';
 import getMonth from 'date-fns/getMonth';
-import getDay from 'date-fns/getDay';
 import setDay from 'date-fns/setDay';
 
 import DayPickerRangeController from '../../src/components/DayPickerRangeController';
@@ -834,7 +834,7 @@ describe('DayPickerRangeController', () => {
                 minimumNights,
               });
               const { visibleDays } = wrapper.state();
-              const day = new Date(today);
+              let day = new Date(today);
               for (let i = 0; i < minimumNights; i += 1) {
                 const monthString = toISOMonthString(day);
                 const dateString = toISODateString(day);
@@ -858,7 +858,7 @@ describe('DayPickerRangeController', () => {
                 minimumNights,
               });
               const { visibleDays } = wrapper.state();
-              const day = new Date(today);
+              let day = new Date(today);
               for (let i = 0; i < minimumNights; i += 1) {
                 const monthString = toISOMonthString(day);
                 const dateString = toISODateString(day);
@@ -901,12 +901,12 @@ describe('DayPickerRangeController', () => {
           const numVisibleDays = 3;
           let visibleDays;
           beforeEach(() => {
-            const startOfMonth = startOfMonth(today);
+            const monthStart = startOfMonth(today);
             visibleDays = {
-              [toISOMonthString(startOfMonth)]: {
-                [toISODateString(startOfMonth)]: [],
-                [toISODateString(addDays(startOfMonth, 1))]: [],
-                [toISODateString(addDays(startOfMonth, 2))]: [],
+              [toISOMonthString(monthStart)]: {
+                [toISODateString(monthStart)]: [],
+                [toISODateString(addDays(monthStart, 1))]: [],
+                [toISODateString(addDays(monthStart, 2))]: [],
               },
             };
           });
@@ -984,12 +984,12 @@ describe('DayPickerRangeController', () => {
           const numVisibleDays = 3;
           let visibleDays;
           beforeEach(() => {
-            const startOfMonth = startOfMonth(today);
+            const monthStart = startOfMonth(today);
             visibleDays = {
-              [toISOMonthString(startOfMonth)]: {
-                [toISODateString(startOfMonth)]: [],
-                [toISODateString(addDays(startOfMonth, 1))]: [],
-                [toISODateString(addDays(startOfMonth, 2))]: [],
+              [toISOMonthString(monthStart)]: {
+                [toISODateString(monthStart)]: [],
+                [toISODateString(addDays(monthStart, 1))]: [],
+                [toISODateString(addDays(monthStart, 2))]: [],
               },
             };
           });
@@ -1067,12 +1067,12 @@ describe('DayPickerRangeController', () => {
           const numVisibleDays = 3;
           let visibleDays;
           beforeEach(() => {
-            const startOfMonth = startOfMonth(today);
+            const monthStart = startOfMonth(today);
             visibleDays = {
-              [toISOMonthString(startOfMonth)]: {
-                [toISODateString(startOfMonth)]: [],
-                [toISODateString(addDays(startOfMonth, 1))]: [],
-                [toISODateString(addDays(startOfMonth, 2))]: [],
+              [toISOMonthString(monthStart)]: {
+                [toISODateString(monthStart)]: [],
+                [toISODateString(addDays(monthStart, 1))]: [],
+                [toISODateString(addDays(monthStart, 2))]: [],
               },
             };
           });
@@ -3274,9 +3274,9 @@ describe('DayPickerRangeController', () => {
             onDatesChange={sinon.stub()}
           />
         ));
-        const startOfMonth = startOfMonth(today);
+        const monthStart = startOfMonth(today);
         const firstFocusableDay = wrapper.instance().getFirstFocusableDay(today);
-        expect(isSameDay(firstFocusableDay, startOfMonth)).to.equal(true);
+        expect(isSameDay(firstFocusableDay, monthStart)).to.equal(true);
       });
     });
 
