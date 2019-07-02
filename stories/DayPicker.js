@@ -22,7 +22,7 @@ const TestPrevIcon = () => (
       position: 'absolute',
       width: '40px',
     }}
-    tabindex="0"
+    tabIndex="0"
   >
     Prev
   </div>
@@ -39,7 +39,7 @@ const TestNextIcon = () => (
       right: '24px',
       width: '40px',
     }}
-    tabindex="0"
+    tabIndex="0"
   >
     Next
   </div>

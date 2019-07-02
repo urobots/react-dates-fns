@@ -3244,7 +3244,7 @@ describe('DayPickerRangeController', () => {
       wrapper.instance().onNextMonthClick();
       expect(onNextMonthClickStub.callCount).to.equal(1);
       expect(getYear(onNextMonthClickStub.firstCall.args[0])).to.equal(getYear(newMonth));
-      expect(getMonth(onNextMonthClickStub.firstCall.args[0]).to.equal(getMonth(newMonth));
+      expect(getMonth(onNextMonthClickStub.firstCall.args[0])).to.equal(getMonth(newMonth));
     });
   });
 
