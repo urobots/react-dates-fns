@@ -122,9 +122,9 @@ describe('DayPickerSingleDateController', () => {
             const monthStart = startOfMonth(today);
             visibleDays = {
               [toISOMonthString(monthStart)]: {
-                [toISODateString(monthStart)]: [],
-                [toISODateString(addDays(monthStart, 1))]:  [],
-                [toISODateString(addDays(monthStart, 2))]: [],
+                [toISODateString(monthStart)]: new Set(),
+                [toISODateString(addDays(monthStart, 1))]: new Set(),
+                [toISODateString(addDays(monthStart, 2))]: new Set(),
               },
             };
           });
@@ -205,9 +205,9 @@ describe('DayPickerSingleDateController', () => {
             const monthStart = startOfMonth(today);
             visibleDays = {
               [toISOMonthString(monthStart)]: {
-                [toISODateString(monthStart)]: [],
-                [toISODateString(addDays(monthStart, 1))]: [],
-                [toISODateString(addDays(monthStart, 2))]: [],
+                [toISODateString(monthStart)]: new Set(),
+                [toISODateString(addDays(monthStart, 1))]: new Set(),
+                [toISODateString(addDays(monthStart, 2))]: new Set(),
               },
             };
           });
@@ -300,9 +300,9 @@ describe('DayPickerSingleDateController', () => {
             const monthStart = startOfMonth(today);
             visibleDays = {
               [toISOMonthString(monthStart)]: {
-                [toISODateString(monthStart)]: [],
-                [toISODateString(addDays(monthStart, 1))]: [],
-                [toISODateString(addDays(monthStart, 2))]: [],
+                [toISODateString(monthStart)]: new Set(),
+                [toISODateString(addDays(monthStart, 1))]: new Set(),
+                [toISODateString(addDays(monthStart, 2))]: new Set(),
               },
             };
           });
@@ -383,9 +383,9 @@ describe('DayPickerSingleDateController', () => {
             const monthStart = startOfMonth(today);
             visibleDays = {
               [toISOMonthString(monthStart)]: {
-                [toISODateString(monthStart)]: [],
-                [toISODateString(addDays(monthStart, 1))]: [],
-                [toISODateString(addDays(monthStart, 2))]: [],
+                [toISODateString(monthStart)]: new Set(),
+                [toISODateString(addDays(monthStart, 1))]: new Set(),
+                [toISODateString(addDays(monthStart, 2))]: new Set(),
               },
             };
           });
@@ -1098,7 +1098,7 @@ describe('DayPickerSingleDateController', () => {
           onFocusChange={sinon.stub()}
         />
       ));
-      const modifiers = wrapper.instance().addModifier({}, today);
+      const modifiers = wrapper.instance().addModifier({}, today, 'foo');
       expect(Object.keys(modifiers)).to.contain(toISOMonthString(today));
     });
 
@@ -1211,8 +1211,14 @@ describe('DayPickerSingleDateController', () => {
           onFocusChange={sinon.stub()}
         />
       ));
-      const modifiers = wrapper.instance().deleteModifier({}, today);
-      expect(Object.keys(modifiers)).to.contain(toISOMonthString(today));
+
+      const isoMonth = toISOMonthString(today);
+      const isoDate = toISODateString(today);
+      const modifiers = wrapper.instance()
+        .deleteModifier({ [isoMonth]: { [isoDate]: new Set(['foo']) } }, today, 'foo');
+
+      expect(Object.keys(modifiers)).to.contain(isoMonth);
+      expect(modifiers[isoMonth][isoDate].size).to.equal(0);
     });
 
     it('has day ISO as key one layer down', () => {
@@ -1224,6 +1230,17 @@ describe('DayPickerSingleDateController', () => {
       ));
       const modifiers = wrapper.instance().addModifier({}, today);
       expect(Object.keys(modifiers[toISOMonthString(today)])).to.contain(toISODateString(today));
+    });
+
+    it('is resilient when visibleDays is an empty object', () => {
+      const wrapper = shallow((
+        <DayPickerSingleDateController
+          onDateChange={sinon.stub()}
+          onFocusChange={sinon.stub()}
+        />
+      ));
+      wrapper.instance().setState({ visibleDays: {} });
+      expect(() => { wrapper.instance().deleteModifier({}, today); }).to.not.throw();
     });
 
     it('return value no longer has modifier arg for day if was in first arg', () => {

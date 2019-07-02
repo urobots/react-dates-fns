@@ -904,9 +904,9 @@ describe('DayPickerRangeController', () => {
             const monthStart = startOfMonth(today);
             visibleDays = {
               [toISOMonthString(monthStart)]: {
-                [toISODateString(monthStart)]: [],
-                [toISODateString(addDays(monthStart, 1))]: [],
-                [toISODateString(addDays(monthStart, 2))]: [],
+                [toISODateString(monthStart)]: new Set(),
+                [toISODateString(addDays(monthStart, 1))]: new Set(),
+                [toISODateString(addDays(monthStart, 2))]: new Set(),
               },
             };
           });
@@ -987,9 +987,9 @@ describe('DayPickerRangeController', () => {
             const monthStart = startOfMonth(today);
             visibleDays = {
               [toISOMonthString(monthStart)]: {
-                [toISODateString(monthStart)]: [],
-                [toISODateString(addDays(monthStart, 1))]: [],
-                [toISODateString(addDays(monthStart, 2))]: [],
+                [toISODateString(monthStart)]: new Set(),
+                [toISODateString(addDays(monthStart, 1))]: new Set(),
+                [toISODateString(addDays(monthStart, 2))]: new Set(),
               },
             };
           });
@@ -1070,9 +1070,9 @@ describe('DayPickerRangeController', () => {
             const monthStart = startOfMonth(today);
             visibleDays = {
               [toISOMonthString(monthStart)]: {
-                [toISODateString(monthStart)]: [],
-                [toISODateString(addDays(monthStart, 1))]: [],
-                [toISODateString(addDays(monthStart, 2))]: [],
+                [toISODateString(monthStart)]: new Set(),
+                [toISODateString(addDays(monthStart, 1))]: new Set(),
+                [toISODateString(addDays(monthStart, 2))]: new Set(),
               },
             };
           });
@@ -3626,6 +3626,17 @@ describe('DayPickerRangeController', () => {
       expect(Object.keys(modifiers)).to.contain(toISOMonthString(today));
     });
 
+    it('is resilient when visibleDays is an empty object', () => {
+      const wrapper = shallow((
+        <DayPickerRangeController
+          onDatesChange={sinon.stub()}
+          onFocusChange={sinon.stub()}
+        />
+      ));
+      wrapper.instance().setState({ visibleDays: {} });
+      expect(() => { wrapper.instance().deleteModifier({}, today); }).to.not.throw();
+    });
+
     it('has day ISO as key one layer down', () => {
       const wrapper = shallow((
         <DayPickerRangeController
@@ -3809,8 +3820,14 @@ describe('DayPickerRangeController', () => {
           onFocusChange={sinon.stub()}
         />
       ));
-      const modifiers = wrapper.instance().deleteModifier({}, today);
-      expect(Object.keys(modifiers)).to.contain(toISOMonthString(today));
+
+      const isoMonth = toISOMonthString(today);
+      const isoDate = toISODateString(today);
+      const modifiers = wrapper.instance()
+        .deleteModifier({ [isoMonth]: { [isoDate]: new Set(['foo']) } }, today, 'foo');
+
+      expect(Object.keys(modifiers)).to.contain(isoMonth);
+      expect(modifiers[isoMonth][isoDate].size).to.equal(0);
     });
 
     it('has day ISO as key one layer down', () => {

@@ -1022,31 +1022,31 @@ export default class DayPickerRangeController extends React.PureComponent {
         Object.keys(visibleDays[monthKey]).indexOf(iso) > -1
       ));
 
-      updatedDaysAfterAddition = monthsToUpdate.reduce((days, monthIso) => {
+      updatedDaysAfterAddition = monthsToUpdate.reduce((acc, monthIso) => {
         const month = updatedDays[monthIso] || visibleDays[monthIso];
-        let modifiers = new Set(month[iso]);
-        modifiers.add(modifier);
-        return {
-          ...days,
-          [monthIso]: {
+        if (!month[iso] || !month[iso].has(modifier)) {
+          const modifiers = new Set(month[iso]);
+          modifiers.add(modifier);
+          acc[monthIso] = {
             ...month,
             [iso]: modifiers,
-          },
-        };
+          };
+        }
+
+        return acc;
       }, updatedDaysAfterAddition);
     } else {
       const monthIso = toISOMonthString(day);
-      const month = updatedDays[monthIso] || visibleDays[monthIso];
+      const month = updatedDays[monthIso] || visibleDays[monthIso] || {};
 
-      let modifiers = new Set(month[iso]);
-      modifiers.add(modifier);
-      updatedDaysAfterAddition = {
-        ...updatedDaysAfterAddition,
-        [monthIso]: {
+      if (!month[iso] || !month[iso].has(modifier)) {
+        const modifiers = new Set(month[iso]);
+        modifiers.add(modifier);
+        updatedDaysAfterAddition[monthIso] = {
           ...month,
           [iso]: modifiers,
-        },
-      };
+        };
+      }
     }
 
     return updatedDaysAfterAddition;
@@ -1087,31 +1087,30 @@ export default class DayPickerRangeController extends React.PureComponent {
         Object.keys(visibleDays[monthKey]).indexOf(iso) > -1
       ));
 
-      updatedDaysAfterDeletion = monthsToUpdate.reduce((days, monthIso) => {
+      updatedDaysAfterDeletion = monthsToUpdate.reduce((acc, monthIso) => {
         const month = updatedDays[monthIso] || visibleDays[monthIso];
-        let modifiers = new Set(month[iso]);
-        modifiers.delete(modifier);
-        return {
-          ...days,
-          [monthIso]: {
+        if (month[iso] && month[iso].has(modifier)) {
+          const modifiers = new Set(month[iso]);
+          modifiers.delete(modifier);
+          acc[monthIso] = {
             ...month,
             [iso]: modifiers,
-          },
-        };
+          };
+        }
+        return acc;
       }, updatedDaysAfterDeletion);
     } else {
       const monthIso = toISOMonthString(day);
-      const month = updatedDays[monthIso] || visibleDays[monthIso];
+      const month = updatedDays[monthIso] || visibleDays[monthIso] || {};
 
-      let modifiers = new Set(month[iso]);
-      modifiers.delete(modifier);
-      updatedDaysAfterDeletion = {
-        ...updatedDaysAfterDeletion,
-        [monthIso]: {
+      if (month[iso] && month[iso].has(modifier)) {
+        const modifiers = new Set(month[iso]);
+        modifiers.delete(modifier);
+        updatedDaysAfterDeletion[monthIso] = {
           ...month,
           [iso]: modifiers,
-        },
-      };
+        };
+      }
     }
 
     return updatedDaysAfterDeletion;

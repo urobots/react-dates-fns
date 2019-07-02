@@ -1,6 +1,6 @@
 {
   "name": "react-dates-fns",
-  "version": "20.2.0",
+  "version": "20.2.4",
   "description": "A responsive and accessible date range picker component built with React",
   "main": "index.js",
   "scripts": {
@@ -72,6 +72,7 @@
     "cross-env": "^5.2.0",
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-helper": "^1.3.5",
+    "enzyme-shallow-equal": "^1.0.0",
     "eslint": "^6.0.1",
     "eslint-config-airbnb": "^17.1.1",
     "eslint-plugin-import": "^2.18.0",
