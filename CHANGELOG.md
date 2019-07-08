@@ -4,6 +4,12 @@
 - []  ([#](https://github.com/airbnb/react-dates/pull/))
 -->
 
+## 20.2.7
+- [fix] Fix CSS
+
+## 20.2.6
+- [fix] Fix build
+
 ## 20.2.5
 - [fix] Defer day focusing until next animation frame ([#1707](https://github.com/airbnb/react-dates/pull/1707))
 - [fix] Fix startDate style (@mmarkelov, [#1710](https://github.com/airbnb/react-dates/pull/1710))

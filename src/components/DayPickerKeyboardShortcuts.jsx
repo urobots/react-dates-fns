@@ -22,7 +22,7 @@ const propTypes = forbidExtraProps({
   openKeyboardShortcutsPanel: PropTypes.func,
   closeKeyboardShortcutsPanel: PropTypes.func,
   phrases: PropTypes.shape(getPhrasePropTypes(DayPickerKeyboardShortcutsPhrases)),
-  renderKeyboardShortcutsButton: undefined,
+  renderKeyboardShortcutsButton: PropTypes.func,
 });
 
 const defaultProps = {
@@ -32,6 +32,7 @@ const defaultProps = {
   openKeyboardShortcutsPanel() {},
   closeKeyboardShortcutsPanel() {},
   phrases: DayPickerKeyboardShortcutsPhrases,
+  renderKeyboardShortcutsButton: undefined,
 };
 
 function getKeyboardShortcuts(phrases) {
