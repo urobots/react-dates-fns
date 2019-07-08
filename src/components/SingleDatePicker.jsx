@@ -192,8 +192,7 @@ class SingleDatePicker extends React.PureComponent {
       focused,
       onFocusChange,
       onClose,
-      startDate,
-      endDate,
+      date,
       appendToBody,
     } = this.props;
 
@@ -207,7 +206,7 @@ class SingleDatePicker extends React.PureComponent {
     });
 
     onFocusChange({ focused: false });
-    onClose({ startDate, endDate });
+    onClose({ date });
   }
 
   onInputFocus({ focused }) {

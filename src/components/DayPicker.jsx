@@ -410,7 +410,7 @@ class DayPicker extends React.PureComponent {
     switch (e.key) {
       case 'ArrowUp':
         e.preventDefault();
-        subWeeks(newFocusedDate, 1);
+        newFocusedDate = subWeeks(newFocusedDate, 1);
         didTransitionMonth = this.maybeTransitionPrevMonth(newFocusedDate);
         break;
       case 'ArrowLeft':
@@ -620,7 +620,7 @@ class DayPicker extends React.PureComponent {
     }
 
     if (newMonth && (!focusedDate || !isDayVisible(focusedDate, newMonth, numberOfMonths))) {
-      focusedDate = startOfMOnth(newMonth);
+      focusedDate = startOfMonth(newMonth);
     }
 
     return focusedDate;
@@ -731,7 +731,7 @@ class DayPicker extends React.PureComponent {
 
     if (!monthTransition) return;
 
-    let newMonth = new Date(currentMonth);
+    let newMonth = currentMonth;
     const firstDayOfWeek = this.getFirstDayOfWeek();
     if (monthTransition === PREV_TRANSITION) {
       newMonth = subMonths(newMonth, 1);

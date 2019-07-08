@@ -2,6 +2,7 @@ import React from 'react';
 import { expect } from 'chai';
 import sinon from 'sinon-sandbox';
 import { shallow } from 'enzyme';
+import raf from 'raf';
 
 import startOfMonth from 'date-fns/startOfMonth';
 import endOfMonth from 'date-fns/endOfMonth';
@@ -58,7 +59,7 @@ describe('CalendarDay', () => {
 
     describe('aria-label', () => {
       const phrases = {};
-      const day = new Date(2017,10,10);
+      const day = new Date(2017, 9, 10);
 
       beforeEach(() => {
         phrases.chooseAvailableDate = sinon.stub().returns('chooseAvailableDate text');
@@ -159,7 +160,7 @@ describe('CalendarDay', () => {
           <CalendarDay
             modifiers={modifiers}
             day={day}
-            ariaLabelFormat="MMMM Do yyyy"
+            ariaLabelFormat="MMMM do yyyy"
           />
         )).dive();
 
@@ -168,14 +169,14 @@ describe('CalendarDay', () => {
     });
 
     describe('event handlers', () => {
-      const day = new Date(2017,10,10);
+      const day = new Date(2017,9,10);
 
       let wrapper;
       beforeEach(() => {
         wrapper = shallow((
           <CalendarDay
             day={day}
-            ariaLabelFormat="MMMM Do yyyy"
+            ariaLabelFormat="MMMM do yyyy"
           />
         )).dive();
       });
@@ -206,7 +207,7 @@ describe('CalendarDay', () => {
   });
 
   describe('#onKeyDown', () => {
-    const day = new Date(2017,10,10);
+    const day = new Date(2017,9,10);
 
     let onDayClick;
     let wrapper;
@@ -238,6 +239,23 @@ describe('CalendarDay', () => {
       const event = { key: 'Shift' };
       wrapper.instance().onKeyDown(day, event);
       expect(onDayClick).to.have.property('callCount', 0);
+    });
+  });
+
+  describe('#componentDidUpdate', () => {
+    it('focuses buttonRef after a delay when isFocused, tabIndex is 0, and tabIndex was not 0', () => {
+      const wrapper = shallow(<CalendarDay isFocused tabIndex={0} />).dive();
+      const focus = sinon.spy();
+      wrapper.instance().buttonRef = { focus };
+      wrapper.instance().componentDidUpdate({ isFocused: true, tabIndex: -1 });
+      expect(focus.callCount).to.eq(0);
+      
+      return new Promise((resolve) => {
+        raf(() => {
+          expect(focus.callCount).to.eq(1);
+          resolve();
+        });
+      });
     });
   });
 

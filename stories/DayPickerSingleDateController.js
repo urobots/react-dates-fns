@@ -42,29 +42,37 @@ const dayPickerSingleDateControllerInfo = `The ${monospace('DayPickerSingleDateC
   implement your own input.`;
 
 const TestPrevIcon = () => (
-  <span
+  <div
     style={{
       border: '1px solid #dce0e0',
       backgroundColor: '#fff',
       color: '#484848',
+      left: '22px',
       padding: '3px',
+      position: 'absolute',
+      top: '20px',
     }}
+    tabIndex="0"
   >
     Prev
-  </span>
+  </div>
 );
 
 const TestNextIcon = () => (
-  <span
+  <div
     style={{
       border: '1px solid #dce0e0',
       backgroundColor: '#fff',
       color: '#484848',
       padding: '3px',
+      position: 'absolute',
+      right: '22px',
+      top: '20px',
     }}
+    tabIndex="0"
   >
     Next
-  </span>
+  </div>
 );
 
 const TestCustomInfoPanel = () => (

@@ -6,6 +6,8 @@ import getDay from 'date-fns/getDay';
 import addDays from 'date-fns/addDays';
 import subDays from 'date-fns/subDays';
 import differenceInCalendarDays from 'date-fns/differenceInCalendarDays';
+import addHours from 'date-fns/addHours';
+import startOfDay from 'date-fns/startOfDay';
 
 import getLocale from './getLocale';
 import { WEEKDAYS } from '../constants';
@@ -48,7 +50,7 @@ export default function getCalendarMonthWeeks(
 
     let day = null;
     if ((i >= prevDays && i < (totalDays - nextDays)) || enableOutsideDays) {
-      day = addDays(firstDay, i);
+      day = addHours(startOfDay(addDays(firstDay, i)), 12);
     }
     weeksInMonth[weeksInMonth.length - 1].push(day);
   }

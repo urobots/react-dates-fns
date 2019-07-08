@@ -19,6 +19,8 @@ import getLocale from '../utils/getLocale';
 import format from 'date-fns/format';
 import addHours from 'date-fns/addHours';
 import startOfDay from 'date-fns/startOfDay';
+import parse from 'date-fns/parse';
+import parseISO from 'date-fns/parseISO';
 
 import {
   ICON_BEFORE_POSITION,
@@ -137,8 +139,15 @@ export default class SingleDatePickerInputController extends React.PureComponent
       onDateChange,
       onFocusChange,
       onClose,
+      displayFormat,
     } = this.props;
-    const newDate = new Date(dateString);
+
+    let newDate;
+    if (typeof displayFormat === 'string' && displayFormat !== 'P') {
+      newDate = parse(dateString, displayFormat, new Date());
+    } else {
+      newDate = parseISO(dateString);
+    }
 
     const isValid = !isOutsideRange(newDate);
     if (isValid) {

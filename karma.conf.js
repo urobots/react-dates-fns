@@ -73,7 +73,7 @@ module.exports = (config) => {
 
     autoWatch: false,
 
-    browsers: ['Firefox'],
+    browsers: ['Firefox', 'FirefoxDeveloper', 'FirefoxAurora', 'FirefoxNightly'],
 
     singleRun: true,
 

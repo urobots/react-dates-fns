@@ -10,6 +10,8 @@ import addHours from 'date-fns/addHours';
 import addDays from 'date-fns/addDays';
 import format from 'date-fns/format';
 import isSameDay from 'date-fns/isSameDay';
+import startOfDay from 'date-fns/startOfDay';
+import parseISO from 'date-fns/parseISO';
 
 // Set to noon to mimic how days in the picker are configured internally
 const today = addHours(startOfDay(new Date()), 12);
@@ -62,7 +64,7 @@ describe('SingleDatePickerInputController', () => {
         ));
         wrapper.instance().onChange(futureDateString);
         const newDate = onDateChangeStub.getCall(0).args[0];
-        expect(isSameDay(newDate, new Date(futureDateString))).to.equal(true);
+        expect(isSameDay(newDate, parseISO(futureDateString))).to.equal(true);
       });
 
       it('calls props.onFocusChange once', () => {
@@ -109,12 +111,12 @@ describe('SingleDatePickerInputController', () => {
         ));
         wrapper.instance().onChange(futureDateString);
         const newDate = onCloseStub.getCall(0).args[0].date;
-        expect(isSameDay(newDate, new Date(futureDateString))).to.equal(true);
+        expect(isSameDay(newDate, parseISO(futureDateString))).to.equal(true);
       });
     });
 
     describe('matches custom display format', () => {
-      const customFormat = 'YY|MM[foobar]DD';
+      const customFormat = "yy|MM'[foobar]'dd";
       const customFormatDateString = format(addDays(new Date(), 5), customFormat);
       it('calls props.onDateChange once', () => {
         const onDateChangeStub = sinon.stub();
@@ -141,7 +143,8 @@ describe('SingleDatePickerInputController', () => {
           />
         ));
         wrapper.instance().onChange(customFormatDateString);
-        const formattedFirstArg = format(onDateChangeStub.getCall(0).args[0], customFormat);
+        const arg = onDateChangeStub.getCall(0).args[0];
+        const formattedFirstArg = format(arg, customFormat);
         expect(formattedFirstArg).to.equal(customFormatDateString);
       });
 

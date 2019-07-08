@@ -4,9 +4,9 @@ import sinon from 'sinon-sandbox';
 import getCalendarDaySettings from '../../src/utils/getCalendarDaySettings';
 import { BLOCKED_MODIFIER } from '../../src/constants';
 
-const testDay = new Date(2017, 10, 10);
+const testDay = new Date(2017, 9, 10); // 2017-10-10
 const expectedFormattedDay = { date: 'Tuesday, October 10, 2017' };
-const testAriaLabelFormat = 'dddd, LL';
+const testAriaLabelFormat = 'EEEE, MMMM d, yyyy';
 const testDaySize = 39;
 const testModifiers = new Set();
 const testPhrases = {

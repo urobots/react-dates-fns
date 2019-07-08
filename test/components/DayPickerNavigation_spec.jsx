@@ -27,7 +27,7 @@ describe('DayPickerNavigation', () => {
     expect(nextMonthButton.prop('tabIndex')).to.equal('0');
   });
 
-  t('tabindex is not present when custom buttons are used', () => {
+  it('tabindex is not present when custom buttons are used', () => {
     const wrapper = shallow(<DayPickerNavigation navNext={<div />} navPrev={<div />} />).dive();
     const prevMonthButton = wrapper.find('[role="button"]').at(0);
     const nextMonthButton = wrapper.find('[role="button"]').at(1);

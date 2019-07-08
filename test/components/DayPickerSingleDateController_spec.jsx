@@ -17,6 +17,7 @@ import startOfDay from 'date-fns/startOfDay';
 import startOfWeek from 'date-fns/startOfWeek';
 import startOfMonth from 'date-fns/startOfMonth';
 import endOfWeek from 'date-fns/endOfWeek';
+import endOfMonth from 'date-fns/endOfMonth';
 import addHours from 'date-fns/addHours';
 import addDays from 'date-fns/addDays';
 import subDays from 'date-fns/subDays';
@@ -24,6 +25,9 @@ import addMonths from 'date-fns/addMonths';
 import subMonths from 'date-fns/subMonths';
 import setDay from 'date-fns/setDay';
 import isSameDay from 'date-fns/isSameDay';
+import getMonth from 'date-fns/getMonth';
+import getYear from 'date-fns/getYear';
+
 
 // Set to noon to mimic how days in the picker are configured internally
 const today = addHours(startOfDay(new Date()), 12);
@@ -1160,7 +1164,7 @@ describe('DayPickerSingleDateController', () => {
       };
       const wrapper = shallow((
         <DayPickerSingleDateController
-          onDatesChange={sinon.stub()}
+          onDateChange={sinon.stub()}
           onFocusChange={sinon.stub()}
           numberOfMonths={numberOfMonths}
           orientation={VERTICAL_SCROLLABLE}
@@ -1290,7 +1294,7 @@ describe('DayPickerSingleDateController', () => {
       };
       const wrapper = shallow((
         <DayPickerSingleDateController
-          onDatesChange={sinon.stub()}
+          onDateChange={sinon.stub()}
           onFocusChange={sinon.stub()}
           numberOfMonths={numberOfMonths}
           orientation={VERTICAL_SCROLLABLE}
@@ -1500,7 +1504,7 @@ describe('DayPickerSingleDateController', () => {
           />
         ));
         const dayPicker = wrapper.find(DayPicker);
-        expect(getMonth(dayPicker.props().initialVisibleMonth())).to.equal(getMOnth(date));
+        expect(getMonth(dayPicker.props().initialVisibleMonth())).to.equal(getMonth(date));
       });
 
       it('DayPickerSingleDateController.props.initialVisibleMonth evaluates to today if !date', () => {

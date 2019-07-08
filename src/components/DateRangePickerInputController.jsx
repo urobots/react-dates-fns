@@ -21,6 +21,8 @@ import format from 'date-fns/format';
 import addDays from 'date-fns/addDays';
 import addHours from 'date-fns/addHours';
 import startOfDay from 'date-fns/startOfDay';
+import parse from 'date-fns/parse';
+import parseISO from 'date-fns/parseISO';
 
 import {
   START_DATE,
@@ -175,9 +177,15 @@ export default class DateRangePickerInputController extends React.PureComponent 
       minimumNights,
       keepOpenOnDateSelect,
       onDatesChange,
+      displayFormat,
     } = this.props;
 
-    const endDate = new Date(endDateString);
+    let endDate;
+    if (typeof displayFormat === 'string' && displayFormat !== 'P') {
+      endDate = addHours(startOfDay(parse(endDateString, displayFormat, new Date())), 12);
+    } else {
+      endDate = addHours(startOfDay(parseISO(endDateString)), 12);
+    }
 
     const isEndDateValid = !isOutsideRange(endDate)
       && !(startDate && isBeforeDay(endDate, addDays(startDate, minimumNights)));
@@ -218,9 +226,15 @@ export default class DateRangePickerInputController extends React.PureComponent 
       onDatesChange,
       onFocusChange,
       disabled,
+      displayFormat
     } = this.props;
 
-    const startDate = new Date(startDateString);
+    let startDate;
+    if (typeof displayFormat === 'string' && displayFormat !== 'P') {
+      startDate = addHours(startOfDay(parse(startDateString, displayFormat, new Date())), 12);
+    } else {
+      startDate = addHours(startOfDay(parseISO(startDateString)), 12);
+    }
     const isEndDateBeforeStartDate = isBeforeDay(endDate, addDays(startDate, minimumNights));
     const isStartDateValid = !isOutsideRange(startDate)
       && !(disabled === END_DATE && isEndDateBeforeStartDate);
@@ -256,7 +270,7 @@ export default class DateRangePickerInputController extends React.PureComponent 
   getDateString(date) {
     const displayFormat = this.getDisplayFormat();
     if (date && displayFormat) {
-      return format(date, displayFormat, {locale: getLocale(this.props.locale)});
+      toLocalizedDateString(date, displayFormat, this.props.locale);
     }
     return toLocalizedDateString(date, null, this.props.locale);
   }

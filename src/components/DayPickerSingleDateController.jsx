@@ -10,10 +10,9 @@ import getPhrasePropTypes from '../utils/getPhrasePropTypes';
 import isAfterDay from '../utils/isAfterDay';
 
 import getVisibleDays from '../utils/getVisibleDays';
-import isDayVisible from '../utils/isDayVisible';
 
 import toISODateString from '../utils/toISODateString';
-import toISOMonthString from '../utils/toISOMonthString';
+import { addModifier, deleteModifier } from '../utils/modifiers';
 import getLocale from '../utils/getLocale';
 
 import ScrollableOrientationShape from '../shapes/ScrollableOrientationShape';
@@ -407,7 +406,11 @@ export default class DayPickerSingleDateController extends React.PureComponent {
   }
 
   onNextMonthClick() {
-    const { onNextMonthClick, numberOfMonths, enableOutsideDays } = this.props;
+    const { 
+      onNextMonthClick,
+      numberOfMonths,
+      enableOutsideDays
+    } = this.props;
     const { currentMonth, visibleDays } = this.state;
 
     const newVisibleDays = {};
@@ -415,9 +418,8 @@ export default class DayPickerSingleDateController extends React.PureComponent {
       newVisibleDays[month] = visibleDays[month];
     });
 
-    const nextMonth = addMonths(currentMonth, numberOfMonths);
+    const nextMonth = addMonths(currentMonth, numberOfMonths + 1);
     const nextMonthVisibleDays = getVisibleDays(nextMonth, 1, enableOutsideDays, true, this.props.locale);
-
     const newCurrentMonth = addMonths(currentMonth, 1);
     this.setState({
       currentMonth: newCurrentMonth,
@@ -525,110 +527,11 @@ export default class DayPickerSingleDateController extends React.PureComponent {
   }
 
   addModifier(updatedDays, day, modifier) {
-    const { numberOfMonths: numberOfVisibleMonths, enableOutsideDays, orientation } = this.props;
-    const { currentMonth: firstVisibleMonth, visibleDays } = this.state;
-
-    let currentMonth = firstVisibleMonth;
-    let numberOfMonths = numberOfVisibleMonths;
-    if (orientation === VERTICAL_SCROLLABLE) {
-      numberOfMonths = Object.keys(visibleDays).length;
-    } else {
-      currentMonth = subMonths(currentMonth, 1);
-      numberOfMonths += 2;
-    }
-    if (!day || !isDayVisible(day, currentMonth, numberOfMonths, enableOutsideDays)) {
-      return updatedDays;
-    }
-
-    const iso = toISODateString(day);
-
-    let updatedDaysAfterAddition = { ...updatedDays };
-    if (enableOutsideDays) {
-      const monthsToUpdate = Object.keys(visibleDays).filter(monthKey => (
-        Object.keys(visibleDays[monthKey]).indexOf(iso) > -1
-      ));
-
-      updatedDaysAfterAddition = monthsToUpdate.reduce((acc, monthIso) => {
-        const month = updatedDays[monthIso] || visibleDays[monthIso];
-        if (!month[iso] || !month[iso].has(modifier)) {
-          const modifiers = new Set(month[iso]);
-          modifiers.add(modifier);
-          acc[monthIso] = {
-            ...month,
-            [iso]: modifiers,
-          };
-        }
-
-        return acc;
-      }, updatedDaysAfterAddition);
-    } else {
-      const monthIso = toISOMonthString(day);
-      const month = updatedDays[monthIso] || visibleDays[monthIso] || {};
-
-      if (!month[iso] || !month[iso].has(modifier)) {
-        const modifiers = new Set(month[iso]);
-        modifiers.add(modifier);
-        updatedDaysAfterAddition[monthIso] = {
-          ...month,
-          [iso]: modifiers,
-        };
-      }
-    }
-
-    return updatedDaysAfterAddition;
+    return addModifier(updatedDays, day, modifier, this.props, this.state);
   }
 
   deleteModifier(updatedDays, day, modifier) {
-    const { numberOfMonths: numberOfVisibleMonths, enableOutsideDays, orientation } = this.props;
-    const { currentMonth: firstVisibleMonth, visibleDays } = this.state;
-
-    let currentMonth = firstVisibleMonth;
-    let numberOfMonths = numberOfVisibleMonths;
-    if (orientation === VERTICAL_SCROLLABLE) {
-      numberOfMonths = Object.keys(visibleDays).length;
-    } else {
-      currentMonth = subMonths(currentMonth, 1);
-      numberOfMonths += 2;
-    }
-    if (!day || !isDayVisible(day, currentMonth, numberOfMonths, enableOutsideDays)) {
-      return updatedDays;
-    }
-
-    const iso = toISODateString(day);
-
-    let updatedDaysAfterDeletion = { ...updatedDays };
-    if (enableOutsideDays) {
-      const monthsToUpdate = Object.keys(visibleDays).filter(monthKey => (
-        Object.keys(visibleDays[monthKey]).indexOf(iso) > -1
-      ));
-
-      updatedDaysAfterDeletion = monthsToUpdate.reduce((days, monthIso) => {
-        const month = updatedDays[monthIso] || visibleDays[monthIso];
-        if (month[iso] && month[iso].has(modifier)) {
-          const modifiers = new Set(month[iso]);
-          modifiers.delete(modifier);
-          acc[monthIso] = {
-            ...month,
-            [iso]: modifiers,
-          };
-        }
-        return acc;
-      }, updatedDaysAfterDeletion);
-    } else {
-      const monthIso = toISOMonthString(day);
-      const month = updatedDays[monthIso] || visibleDays[monthIso] || {};
-
-      if (month[iso] && month[iso].has(modifier)) {
-        const modifiers = new Set(month[iso]);
-        modifiers.delete(modifier);
-        updatedDaysAfterDeletion[monthIso] = {
-          ...month,
-          [iso]: modifiers,
-        };
-      }
-    }
-
-    return updatedDaysAfterDeletion;
+    return deleteModifier(updatedDays, day, modifier, this.props, this.state);
   }
 
   isBlocked(day) {
@@ -651,12 +554,18 @@ export default class DayPickerSingleDateController extends React.PureComponent {
   }
 
   isFirstDayOfWeek(day) {
-    const { locale } = this.props;
+    const { firstDayOfWeek, locale } = this.props;
+    if (firstDayOfWeek) {
+      return isSameDay(day, startOfWeek(day, {weekStartsOn: firstDayOfWeek}));
+    }
     return isSameDay(day, startOfWeek(day, {locale: getLocale(locale)}));
   }
 
   isLastDayOfWeek(day) {
-    const { locale } = this.props;
+    const { firstDayOfWeek, locale } = this.props;
+    if (firstDayOfWeek) {
+      return isSameDay(day, endOfWeek(day, {weekStartsOn: firstDayOfWeek}));
+    }
     return isSameDay(day, endOfWeek(day, {locale: getLocale(locale)}));
   }
 

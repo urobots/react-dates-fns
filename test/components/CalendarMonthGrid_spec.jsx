@@ -62,7 +62,7 @@ describe('CalendarMonthGrid', () => {
     const { months } = wrapper.state();
 
     const collisions = months
-      .map(m => formar(m, 'yyyy-MM'))
+      .map(m => format(m, 'yyyy-MM'))
       .reduce((acc, m) => ({ ...acc, [m]: true }), {});
 
     expect(Object.keys(collisions).length).to.equal(months.length);

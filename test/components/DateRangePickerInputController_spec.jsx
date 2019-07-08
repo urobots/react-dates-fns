@@ -13,6 +13,8 @@ import addDays from 'date-fns/addDays';
 import addHours from 'date-fns/addHours';
 import format from 'date-fns/format';
 import isSameDay from 'date-fns/isSameDay';
+import parseISO from 'date-fns/parseISO';
+import parse from 'date-fns/parse';
 
 import {
   START_DATE,
@@ -143,7 +145,7 @@ describe('DateRangePickerInputController', () => {
 
           const [{ startDate, endDate }] = onDatesChangeStub.getCall(0).args;
           expect(startDate).to.equal(wrapper.props().startDate);
-          expect(isSameDay(endDate, new Date(validFutureDateString))).to.equal(true);
+          expect(isSameDay(endDate, parseISO(validFutureDateString))).to.equal(true);
         });
 
         describe('props.onFocusChange', () => {
@@ -220,7 +222,7 @@ describe('DateRangePickerInputController', () => {
           expect(onDatesChangeStub.callCount).to.equal(1);
 
           const onDatesChangeArgs = onDatesChangeStub.getCall(0).args[0];
-          const futureDate = new Date(validFutureDateString);
+          const futureDate = parseISO(validFutureDateString);
           expect(onDatesChangeArgs.startDate).to.equal(startDate);
           expect(isSameDay(onDatesChangeArgs.endDate, futureDate)).to.equal(true);
         });
@@ -263,7 +265,7 @@ describe('DateRangePickerInputController', () => {
             expect(onDatesChangeStub.callCount).to.equal(1);
 
             const onDatesChangeArgs = onDatesChangeStub.getCall(0).args[0];
-            const futureDate = new Date(validFutureDateString);
+            const futureDate = parseISO(validFutureDateString);
             expect(onDatesChangeArgs.startDate).to.equal(startDate);
             expect(isSameDay(onDatesChangeArgs.endDate, futureDate)).to.equal(true);
           });
@@ -311,7 +313,7 @@ describe('DateRangePickerInputController', () => {
     });
 
     describe('matches custom display format', () => {
-      const customFormat = 'YY|MM[foobar]DD';
+      const customFormat = "yy|MM'[foobar]'dd";
       const customFormatDateString = format(addDays(today, 5), customFormat);
       it('calls props.onDatesChange with correct arguments', () => {
         const onDatesChangeStub = sinon.stub();
@@ -392,7 +394,7 @@ describe('DateRangePickerInputController', () => {
     });
 
     describe('is outside range', () => {
-      const futureDate = toISOString(addDays(new Date(), 7));
+      const futureDate = addDays(new Date(), 7).toISOString();
       const isOutsideRange = day => day >= addDays(new Date(), 3);
 
       it('calls props.onDatesChange', () => {
@@ -492,7 +494,7 @@ describe('DateRangePickerInputController', () => {
           expect(onDatesChangeStub.callCount).to.equal(1);
 
           const onDatesChangeArgs = onDatesChangeStub.getCall(0).args[0];
-          const futureDate = new Date(validFutureDateString);
+          const futureDate = parseISO(validFutureDateString);
           expect(isSameDay(onDatesChangeArgs.startDate, futureDate)).to.equal(true);
           expect(onDatesChangeArgs.endDate).to.equal(endDate);
         });
@@ -538,7 +540,7 @@ describe('DateRangePickerInputController', () => {
           expect(onDatesChangeStub.callCount).to.equal(1);
 
           const onDatesChangeArgs = onDatesChangeStub.getCall(0).args[0];
-          const futureDate = new Date(validFutureDateString);
+          const futureDate = parseISO(validFutureDateString);
           expect(isSameDay(onDatesChangeArgs.startDate, futureDate)).to.equal(true);
           expect(onDatesChangeArgs.endDate).to.equal(null);
         });
@@ -587,7 +589,7 @@ describe('DateRangePickerInputController', () => {
             expect(onDatesChangeStub.callCount).to.equal(1);
 
             const onDatesChangeArgs = onDatesChangeStub.getCall(0).args[0];
-            const futureDate = new Date(validFutureDateString);
+            const futureDate = parseISO(validFutureDateString);
             expect(isSameDay(onDatesChangeArgs.startDate, futureDate)).to.equal(true);
             expect(onDatesChangeArgs.endDate).to.equal(endDate);
           });
@@ -607,7 +609,7 @@ describe('DateRangePickerInputController', () => {
             expect(onDatesChangeStub.callCount).to.equal(1);
 
             const onDatesChangeArgs = onDatesChangeStub.getCall(0).args[0];
-            const futureDate = new Date(validFutureDateString);
+            const futureDate = parseISO(validFutureDateString);
             expect(isSameDay(onDatesChangeArgs.startDate, futureDate)).to.equal(true);
             expect(onDatesChangeArgs.endDate).to.equal(null);
           });
@@ -642,7 +644,7 @@ describe('DateRangePickerInputController', () => {
     });
 
     describe('matches custom display format', () => {
-      const customFormat = 'YY|MM[foobar]DD';
+      const customFormat = "yy|MM'[foobar]'dd";
       const customFormatDateString = format(addDays(today, 5), customFormat);
       it('calls props.onDatesChange with correct arguments', () => {
         const onDatesChangeStub = sinon.stub();
@@ -723,7 +725,7 @@ describe('DateRangePickerInputController', () => {
     });
 
     describe('is outside range', () => {
-      const futureDate = toISOString(addDays(new Date(), 7)).toISOString();
+      const futureDate = addDays(new Date(), 7).toISOString();
       const isOutsideRange = day => day > addDays(new Date(), 5);
 
       it('calls props.onDatesChange', () => {

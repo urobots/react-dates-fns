@@ -7,6 +7,7 @@ import addDays from 'date-fns/addDays';
 import subDays from 'date-fns/subDays';
 import addWeeks from 'date-fns/addWeeks';
 import addMonths from 'date-fns/addMonths';
+import subMonths from 'date-fns/subMonths';
 import getDay from 'date-fns/getDay';
 import getMonth from 'date-fns/getMonth';
 import getYear from 'date-fns/getYear';
@@ -14,6 +15,8 @@ import format from 'date-fns/format';
 import isSameDay from 'date-fns/isSameDay';
 import startOfWeek from 'date-fns/startOfWeek';
 import endOfWeek from 'date-fns/endOfWeek';
+import startOfMonth from 'date-fns/startOfMonth';
+import endOfMonth from 'date-fns/endOfMonth';
 
 import InfoPanelDecorator, { monospace } from './InfoPanelDecorator';
 
@@ -43,29 +46,37 @@ const dayPickerRangeControllerInfo = `The ${monospace('DayPickerRangeController'
   implement your own inputs.`;
 
 const TestPrevIcon = () => (
-  <span
+  <div
     style={{
       border: '1px solid #dce0e0',
       backgroundColor: '#fff',
       color: '#484848',
+      left: '22px',
       padding: '3px',
+      position: 'absolute',
+      top: '20px',
     }}
+    tabIndex="0"
   >
     Prev
-  </span>
+  </div>
 );
 
 const TestNextIcon = () => (
-  <span
+  <div
     style={{
       border: '1px solid #dce0e0',
       backgroundColor: '#fff',
       color: '#484848',
       padding: '3px',
+      position: 'absolute',
+      right: '22px',
+      top: '20px',
     }}
+    tabIndex="0"
   >
     Next
-  </span>
+  </div>
 );
 
 const TestCustomInfoPanel = () => (
@@ -302,8 +313,8 @@ storiesOf('DayPickerRangeController', module)
   )))
   .add('with custom month navigation and blocked navigation (minDate and maxDate)', withInfo()(() => (
     <DayPickerRangeControllerWrapper
-      minDate={new Date('2018-07-01')}
-      maxDate={new Date('2018-10-20')}
+      minDate={subMonths(startOfMonth(new Date()), 2)}
+      maxDate={addMonths(endOfMonth(new Date()), 2)}
       onOutsideClick={action('DayPickerRangeController::onOutsideClick')}
       onPrevMonthClick={action('DayPickerRangeController::onPrevMonthClick')}
       onNextMonthClick={action('DayPickerRangeController::onNextMonthClick')}
@@ -392,8 +403,8 @@ storiesOf('DayPickerRangeController', module)
   )))
   .add('with navigation blocked (minDate and maxDate)', withInfo()(() => (
     <DayPickerRangeControllerWrapper
-      minDate={new Date('2018-07-01')}
-      maxDate={new Date('2018-10-20')}
+      minDate={subMonths(startOfMonth(new Date()), 2)}
+      maxDate={addMonths(endOfMonth(new Date()), 2)}
       onOutsideClick={action('DayPickerRangeController::onOutsideClick')}
       onPrevMonthClick={action('DayPickerRangeController::onPrevMonthClick')}
       onNextMonthClick={action('DayPickerRangeController::onNextMonthClick')}

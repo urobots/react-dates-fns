@@ -4,6 +4,8 @@ import { shallow } from 'enzyme';
 import sinon from 'sinon-sandbox';
 
 import format from 'date-fns/format';
+import subMonths from 'date-fns/subMonths';
+import isDate from 'date-fns/isDate';
 
 import CalendarMonth from '../../src/components/CalendarMonth';
 
@@ -32,7 +34,7 @@ describe('CalendarMonth', () => {
     it('renderMonthElement renders month element when month changes', () => {
       const renderMonthElementStub = sinon.stub().returns(<div id="month-element" />);
       const wrapper = shallow(<CalendarMonth renderMonthElement={renderMonthElementStub} />).dive();
-      wrapper.setProps({ month: moment().subtract(1, 'months') });
+      wrapper.setProps({ month: subMonths(new Date(), 1) });
 
       const [{
         month,
@@ -41,7 +43,7 @@ describe('CalendarMonth', () => {
         isVisible,
       }] = renderMonthElementStub.getCall(0).args;
 
-      expect(moment.isMoment(month)).to.equal(true);
+      expect(isDate(month)).to.equal(true);
       expect(typeof onMonthSelect).to.equal('function');
       expect(typeof onYearSelect).to.equal('function');
       expect(typeof isVisible).to.equal('boolean');

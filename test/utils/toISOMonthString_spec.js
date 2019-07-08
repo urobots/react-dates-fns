@@ -25,7 +25,7 @@ describe('#toISOMonthString', () => {
     describe('arg matches the second arg date format provided', () => {
       it('returns month in ISO_MONTH_FORMAT format', () => {
         const today = new Date();
-        const dateFormat = 'MM_DD_yyyy';
+        const dateFormat = 'MM_dd_yyyy';
         const formattedDate = format(today, dateFormat);
         const monthString = toISOMonthString(formattedDate, dateFormat);
         expect(monthString).to.equal(format(today, ISO_MONTH_FORMAT));
@@ -35,8 +35,8 @@ describe('#toISOMonthString', () => {
     describe('arg is neither in iso format or in the provided format', () => {
       it('returns null', () => {
         const today = new Date();
-        const dateFormat = 'MM_DD_yyyy';
-        const formattedDate = format(today, 'MM-DD-yyyy');
+        const dateFormat = 'MM_dd_yyyy';
+        const formattedDate = format(today, 'MM-dd-yyyy');
         expect(toISOMonthString(formattedDate, dateFormat)).to.equal(null);
       });
     });
