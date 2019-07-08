@@ -17,7 +17,7 @@ import getMonths from '../src/utils/getMonths';
 import InfoPanelDecorator, { monospace } from './InfoPanelDecorator';
 
 import isInclusivelyAfterDay from '../src/utils/isInclusivelyAfterDay';
-import CustomizableCalendarDay, { defaultStyles, selectedStyles } from '../src/components/CustomizableCalendarDay';
+import CustomizableCalendarDay, { defaultStyles } from '../src/components/CustomizableCalendarDay';
 
 import { VERTICAL_ORIENTATION } from '../src/constants';
 
