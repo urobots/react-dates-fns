@@ -15,9 +15,7 @@ import DisabledShape from '../shapes/DisabledShape';
 import toLocalizedDateString from '../utils/toLocalizedDateString';
 import isInclusivelyAfterDay from '../utils/isInclusivelyAfterDay';
 import isBeforeDay from '../utils/isBeforeDay';
-import getLocale from '../utils/getLocale';
 
-import format from 'date-fns/format';
 import addDays from 'date-fns/addDays';
 import addHours from 'date-fns/addHours';
 import startOfDay from 'date-fns/startOfDay';

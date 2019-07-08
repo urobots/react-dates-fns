@@ -10,7 +10,6 @@ import DateRangePickerInputController from '../../src/components/DateRangePicker
 import DayPickerRangeController from '../../src/components/DayPickerRangeController';
 
 import addDays from 'date-fns/addDays';
-import subDays from 'date-fns/subDays';
 import isSameDay from 'date-fns/isSameDay';
 import parseISO from 'date-fns/parseISO';
 

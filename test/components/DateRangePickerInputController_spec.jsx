@@ -14,7 +14,6 @@ import addHours from 'date-fns/addHours';
 import format from 'date-fns/format';
 import isSameDay from 'date-fns/isSameDay';
 import parseISO from 'date-fns/parseISO';
-import parse from 'date-fns/parse';
 
 import {
   START_DATE,
