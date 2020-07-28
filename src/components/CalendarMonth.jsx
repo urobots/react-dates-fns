@@ -5,6 +5,12 @@ import PropTypes from 'prop-types';
 import { forbidExtraProps, mutuallyExclusiveProps, nonNegativeInteger } from 'airbnb-prop-types';
 import { css, withStyles, withStylesPropTypes } from 'react-with-styles';
 
+import getMonth from 'date-fns/getMonth';
+import isEqual from 'date-fns/isEqual';
+import format from 'date-fns/format';
+import addHours from 'date-fns/addHours';
+import startOfDay from 'date-fns/startOfDay';
+import isSameDay from 'date-fns/isSameDay';
 import { CalendarDayPhrases } from '../defaultPhrases';
 import getPhrasePropTypes from '../utils/getPhrasePropTypes';
 
@@ -19,13 +25,6 @@ import getLocale from '../utils/getLocale';
 import ModifiersShape from '../shapes/ModifiersShape';
 import ScrollableOrientationShape from '../shapes/ScrollableOrientationShape';
 import DayOfWeekShape from '../shapes/DayOfWeekShape';
-
-import getMonth from 'date-fns/getMonth';
-import isEqual from 'date-fns/isEqual';
-import format from 'date-fns/format';
-import addHours from 'date-fns/addHours';
-import startOfDay from 'date-fns/startOfDay';
-import isSameDay from 'date-fns/isSameDay';
 
 import {
   HORIZONTAL_ORIENTATION,
@@ -79,7 +78,7 @@ const defaultProps = {
   onMonthSelect() {},
   onYearSelect() {},
   renderMonthText: null,
-  renderCalendarDay: props => (<CalendarDay {...props} />),
+  renderCalendarDay: (props) => (<CalendarDay {...props} />),
   renderDayContents: null,
   renderMonthElement: null,
   firstDayOfWeek: null,
@@ -107,10 +106,10 @@ class CalendarMonth extends React.PureComponent {
       weeks: getCalendarMonthWeeks(
         props.month,
         props.enableOutsideDays,
-        props.firstDayOfWeek === null ?
-          localeData.options.weekStartsOn : props.firstDayOfWeek,
-          // 0 : props.firstDayOfWeek,
-        props.locale
+        props.firstDayOfWeek === null
+          ? localeData.options.weekStartsOn : props.firstDayOfWeek,
+        // 0 : props.firstDayOfWeek,
+        props.locale,
       ),
     };
 
@@ -123,7 +122,9 @@ class CalendarMonth extends React.PureComponent {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { month, enableOutsideDays, firstDayOfWeek, locale } = nextProps;
+    const {
+      month, enableOutsideDays, firstDayOfWeek, locale,
+    } = nextProps;
     const localeData = getLocale(locale);
     const {
       month: prevMonth,
@@ -187,11 +188,11 @@ class CalendarMonth extends React.PureComponent {
       renderMonthText,
       styles,
       verticalBorderSpacing,
-      locale
+      locale,
     } = this.props;
 
     const { weeks } = this.state;
-    const monthTitle = renderMonthText ? renderMonthText(month) : format(month, monthFormat, {locale: getLocale(locale)});
+    const monthTitle = renderMonthText ? renderMonthText(month) : format(month, monthFormat, { locale: getLocale(locale) });
 
     const verticalScrollable = orientation === VERTICAL_SCROLLABLE;
 

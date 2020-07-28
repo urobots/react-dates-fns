@@ -4,14 +4,13 @@ import PropTypes from 'prop-types';
 import { forbidExtraProps } from 'airbnb-prop-types';
 import omit from 'lodash/omit';
 
+import format from 'date-fns/format';
 import DayPickerSingleDateController from '../src/components/DayPickerSingleDateController';
 
 import ScrollableOrientationShape from '../src/shapes/ScrollableOrientationShape';
 
 import { HORIZONTAL_ORIENTATION } from '../src/constants';
 import isInclusivelyAfterDay from '../src/utils/isInclusivelyAfterDay';
-
-import format from 'date-fns/format';
 
 const propTypes = forbidExtraProps({
   // example props for the demo
@@ -34,6 +33,8 @@ const propTypes = forbidExtraProps({
 
   navPrev: PropTypes.node,
   navNext: PropTypes.node,
+  renderNavPrevButton: PropTypes.func,
+  renderNavNextButton: PropTypes.func,
 
   onPrevMonthClick: PropTypes.func,
   onNextMonthClick: PropTypes.func,
@@ -57,7 +58,7 @@ const defaultProps = {
   renderCalendarDay: undefined,
   renderDayContents: null,
   isDayBlocked: () => false,
-  isOutsideRange: day => !isInclusivelyAfterDay(day, new Date()),
+  isOutsideRange: (day) => !isInclusivelyAfterDay(day, new Date()),
   isDayHighlighted: () => false,
   enableOutsideDays: false,
 
@@ -74,6 +75,8 @@ const defaultProps = {
   // navigation related props
   navPrev: null,
   navNext: null,
+  renderNavPrevButton: null,
+  renderNavNextButton: null,
   onPrevMonthClick() {},
   onNextMonthClick() {},
 
@@ -117,11 +120,11 @@ class DayPickerSingleDateControllerWrapper extends React.Component {
 
     return (
       <div>
-        {showInput &&
+        {showInput && (
           <div style={{ marginBottom: 16 }}>
             <input type="text" name="start date" value={dateString || ''} readOnly />
           </div>
-        }
+        )}
 
         <DayPickerSingleDateController
           {...props}

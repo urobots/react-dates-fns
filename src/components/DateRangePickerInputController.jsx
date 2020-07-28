@@ -2,6 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { forbidExtraProps, nonNegativeInteger } from 'airbnb-prop-types';
+import addDays from 'date-fns/addDays';
+import addHours from 'date-fns/addHours';
+import startOfDay from 'date-fns/startOfDay';
+import parse from 'date-fns/parse';
+import parseISO from 'date-fns/parseISO';
+import isValid from 'date-fns/isValid';
 import openDirectionShape from '../shapes/OpenDirectionShape';
 
 import { DateRangePickerInputPhrases } from '../defaultPhrases';
@@ -15,12 +21,6 @@ import DisabledShape from '../shapes/DisabledShape';
 import toLocalizedDateString from '../utils/toLocalizedDateString';
 import isInclusivelyAfterDay from '../utils/isInclusivelyAfterDay';
 import isBeforeDay from '../utils/isBeforeDay';
-
-import addDays from 'date-fns/addDays';
-import addHours from 'date-fns/addHours';
-import startOfDay from 'date-fns/startOfDay';
-import parse from 'date-fns/parse';
-import parseISO from 'date-fns/parseISO';
 
 import {
   START_DATE,
@@ -64,6 +64,7 @@ const propTypes = forbidExtraProps({
   withFullScreenPortal: PropTypes.bool,
   minimumNights: nonNegativeInteger,
   isOutsideRange: PropTypes.func,
+  isDayBlocked: PropTypes.func,
   displayFormat: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
 
   onFocusChange: PropTypes.func,
@@ -83,7 +84,7 @@ const propTypes = forbidExtraProps({
   phrases: PropTypes.shape(getPhrasePropTypes(DateRangePickerInputPhrases)),
   locale: PropTypes.string,
 
-  isRTL: PropTypes.bool
+  isRTL: PropTypes.bool,
 });
 
 const defaultProps = {
@@ -120,7 +121,8 @@ const defaultProps = {
   reopenPickerOnClearDates: false,
   withFullScreenPortal: false,
   minimumNights: 1,
-  isOutsideRange: day => !isInclusivelyAfterDay(day, addHours(startOfDay(new Date()), 12)),
+  isOutsideRange: (day) => !isInclusivelyAfterDay(day, addHours(startOfDay(new Date()), 12)),
+  isDayBlocked: () => false,
   displayFormat: () => 'P',
 
   onFocusChange() {},
@@ -140,10 +142,9 @@ const defaultProps = {
   phrases: DateRangePickerInputPhrases,
   locale: null,
 
-  isRTL: false
+  isRTL: false,
 };
 
-/** @extends React.Component */
 export default class DateRangePickerInputController extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -172,6 +173,7 @@ export default class DateRangePickerInputController extends React.PureComponent 
     const {
       startDate,
       isOutsideRange,
+      isDayBlocked,
       minimumNights,
       keepOpenOnDateSelect,
       onDatesChange,
@@ -184,11 +186,19 @@ export default class DateRangePickerInputController extends React.PureComponent 
     } else {
       endDate = addHours(startOfDay(parseISO(endDateString)), 12);
     }
+    if (!isValid(endDate)) {
+      endDate = null;
+    }
 
-    const isEndDateValid = !isOutsideRange(endDate)
+    const isEndDateValid = endDate
+      && !isOutsideRange(endDate) && !isDayBlocked(endDate)
       && !(startDate && isBeforeDay(endDate, addDays(startDate, minimumNights)));
+
     if (isEndDateValid) {
-      onDatesChange({ startDate, endDate });
+      onDatesChange({
+        startDate,
+        endDate,
+      });
       if (!keepOpenOnDateSelect) this.onClearFocus();
     } else {
       onDatesChange({
@@ -220,11 +230,12 @@ export default class DateRangePickerInputController extends React.PureComponent 
     let { endDate } = this.props;
     const {
       isOutsideRange,
+      isDayBlocked,
       minimumNights,
       onDatesChange,
       onFocusChange,
       disabled,
-      displayFormat
+      displayFormat,
     } = this.props;
 
     let startDate;
@@ -233,8 +244,15 @@ export default class DateRangePickerInputController extends React.PureComponent 
     } else {
       startDate = addHours(startOfDay(parseISO(startDateString)), 12);
     }
+
+    if (!isValid(startDate)) {
+      startDate = null;
+    }
+
     const isEndDateBeforeStartDate = isBeforeDay(endDate, addDays(startDate, minimumNights));
-    const isStartDateValid = !isOutsideRange(startDate)
+
+    const isStartDateValid = startDate
+      && !isOutsideRange(startDate) && !isDayBlocked(startDate)
       && !(disabled === END_DATE && isEndDateBeforeStartDate);
 
     if (isStartDateValid) {
@@ -315,7 +333,7 @@ export default class DateRangePickerInputController extends React.PureComponent 
       block,
       small,
       regular,
-      verticalSpacing
+      verticalSpacing,
     } = this.props;
 
     const startDateString = this.getDateString(startDate);

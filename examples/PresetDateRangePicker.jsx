@@ -4,13 +4,19 @@ import omit from 'lodash/omit';
 
 import { withStyles, withStylesPropTypes, css } from 'react-with-styles';
 
+import isSameDay from 'date-fns/isSameDay';
+
 import DateRangePicker from '../src/components/DateRangePicker';
 
 import { DateRangePickerPhrases } from '../src/defaultPhrases';
 import DateRangePickerShape from '../src/shapes/DateRangePickerShape';
-import { START_DATE, END_DATE, HORIZONTAL_ORIENTATION, ANCHOR_LEFT } from '../src/constants';
-
-import isSameDay from 'date-fns/isSameDay';
+import {
+  START_DATE,
+  END_DATE,
+  HORIZONTAL_ORIENTATION,
+  ANCHOR_LEFT,
+  NAV_POSITION_TOP,
+} from '../src/constants';
 
 const propTypes = {
   ...withStylesPropTypes,
@@ -72,6 +78,7 @@ const defaultProps = {
   locale: null,
 
   // navigation related props
+  navPosition: NAV_POSITION_TOP,
   navPrev: null,
   navNext: null,
   onPrevMonthClick() {},
@@ -83,13 +90,13 @@ const defaultProps = {
   minimumNights: 0,
   enableOutsideDays: false,
   isDayBlocked: () => false,
-  isOutsideRange: day => false,
+  isOutsideRange: (day) => false,
   isDayHighlighted: () => false,
 
   // internationalization
   displayFormat: () => 'P',
   monthFormat: 'MMMM yyyy',
-  phrases: DateRangePickerPhrases
+  phrases: DateRangePickerPhrases,
 };
 
 class DateRangePickerWrapper extends React.Component {

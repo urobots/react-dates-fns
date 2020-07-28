@@ -31,13 +31,13 @@ describe('CalendarDay', () => {
 
     it('contains arbitrary content if renderDay is provided', () => {
       const dayName = format(new Date(), 'dddd');
-      const renderDay = day => format(day, 'dddd');
+      const renderDay = (day) => format(day, 'dddd');
       const wrapper = shallow(<CalendarDay renderDayContents={renderDay} />).dive();
       expect(wrapper.text()).to.equal(dayName);
     });
 
     it('passes modifiers to renderDayContents', () => {
-      let modifiers = new Set([BLOCKED_MODIFIER]);
+      const modifiers = new Set([BLOCKED_MODIFIER]);
       const renderDayContents = (day, mods) => `${format(day, 'dddd')}${mods.has(BLOCKED_MODIFIER) ? 'BLOCKED' : ''}`;
       const expected = `${format(new Date(), 'dddd')}BLOCKED`;
       const wrapper = shallow((
@@ -169,7 +169,7 @@ describe('CalendarDay', () => {
     });
 
     describe('event handlers', () => {
-      const day = new Date(2017,9,10);
+      const day = new Date(2017, 9, 10);
 
       let wrapper;
       beforeEach(() => {
@@ -207,7 +207,7 @@ describe('CalendarDay', () => {
   });
 
   describe('#onKeyDown', () => {
-    const day = new Date(2017,9,10);
+    const day = new Date(2017, 9, 10);
 
     let onDayClick;
     let wrapper;
@@ -249,7 +249,7 @@ describe('CalendarDay', () => {
       wrapper.instance().buttonRef = { focus };
       wrapper.instance().componentDidUpdate({ isFocused: true, tabIndex: -1 });
       expect(focus.callCount).to.eq(0);
-      
+
       return new Promise((resolve) => {
         raf(() => {
           expect(focus.callCount).to.eq(1);

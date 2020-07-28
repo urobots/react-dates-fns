@@ -3,7 +3,6 @@ import isDayVisible from './isDayVisible';
 import toISODateString from './toISODateString';
 import toISOMonthString from './toISOMonthString';
 
-
 import { VERTICAL_SCROLLABLE } from '../constants';
 
 export function addModifier(updatedDays, day, modifier, props, state) {
@@ -26,7 +25,7 @@ export function addModifier(updatedDays, day, modifier, props, state) {
 
   let updatedDaysAfterAddition = { ...updatedDays };
   if (enableOutsideDays) {
-    const monthsToUpdate = Object.keys(visibleDays).filter(monthKey => (
+    const monthsToUpdate = Object.keys(visibleDays).filter((monthKey) => (
       Object.keys(visibleDays[monthKey]).indexOf(iso) > -1
     ));
 
@@ -79,7 +78,7 @@ export function deleteModifier(updatedDays, day, modifier, props, state) {
 
   let updatedDaysAfterDeletion = { ...updatedDays };
   if (enableOutsideDays) {
-    const monthsToUpdate = Object.keys(visibleDays).filter(monthKey => (
+    const monthsToUpdate = Object.keys(visibleDays).filter((monthKey) => (
       Object.keys(visibleDays[monthKey]).indexOf(iso) > -1
     ));
 

@@ -58,6 +58,54 @@ const TestCustomInfoPanel = () => (
   </div>
 );
 
+function renderNavPrevButton(buttonProps) {
+  const {
+    ariaLabel,
+    disabled,
+    onClick,
+    onKeyUp,
+    onMouseUp,
+  } = buttonProps;
+
+  return (
+    <button
+      aria-label={ariaLabel}
+      disabled={disabled}
+      onClick={onClick}
+      onKeyUp={onKeyUp}
+      onMouseUp={onMouseUp}
+      style={{ position: 'absolute', top: 23, left: 22 }}
+      type="button"
+    >
+      &lsaquo; Prev
+    </button>
+  );
+}
+
+function renderNavNextButton(buttonProps) {
+  const {
+    ariaLabel,
+    disabled,
+    onClick,
+    onKeyUp,
+    onMouseUp,
+  } = buttonProps;
+
+  return (
+    <button
+      aria-label={ariaLabel}
+      disabled={disabled}
+      onClick={onClick}
+      onKeyUp={onKeyUp}
+      onMouseUp={onMouseUp}
+      style={{ position: 'absolute', top: 23, right: 22 }}
+      type="button"
+    >
+      Next &rsaquo;
+    </button>
+  );
+}
+
 storiesOf('DayPicker', module)
   .add('default', withInfo()(() => (
     <DayPicker />
@@ -134,9 +182,15 @@ storiesOf('DayPicker', module)
       navNext={<TestNextIcon />}
     />
   )))
+  .add('with custom navigation buttons', withInfo()(() => (
+    <DayPicker
+      renderNavPrevButton={renderNavPrevButton}
+      renderNavNextButton={renderNavNextButton}
+    />
+  )))
   .add('with custom details', withInfo()(() => (
     <DayPicker
-      renderDayContents={day => (getDate(day) % 6 === 5 ? '😻' : format(day, 'd'))}
+      renderDayContents={(day) => (day.day() % 6 === 5 ? '😻' : day.format('D'))}
     />
   )))
   .add('vertical with fixed-width container', withInfo()(() => (
@@ -151,6 +205,13 @@ storiesOf('DayPicker', module)
     <DayPicker
       renderCalendarInfo={() => (
         <TestCustomInfoPanel />
+      )}
+    />
+  )))
+  .add('with custom week header text', withInfo()(() => (
+    <DayPicker
+      renderWeekHeaderElement={(day) => (
+        <strong style={{ color: '#FE01E5' }}><small>{day.toUpperCase()}</small></strong>
       )}
     />
   )))

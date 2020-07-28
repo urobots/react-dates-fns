@@ -4,13 +4,12 @@ import { forbidExtraProps, nonNegativeInteger, or } from 'airbnb-prop-types';
 import { css, withStyles, withStylesPropTypes } from 'react-with-styles';
 import raf from 'raf';
 
-import { CalendarDayPhrases } from '../defaultPhrases';
-import getPhrasePropTypes from '../utils/getPhrasePropTypes';
-import getCalendarDaySettings from '../utils/getCalendarDaySettings';
-
 import format from 'date-fns/format';
 import addHours from 'date-fns/addHours';
 import startOfDay from 'date-fns/startOfDay';
+import { CalendarDayPhrases } from '../defaultPhrases';
+import getPhrasePropTypes from '../utils/getPhrasePropTypes';
+import getCalendarDaySettings from '../utils/getCalendarDaySettings';
 
 import { DAY_SIZE } from '../constants';
 import DefaultTheme from '../theme/DefaultTheme';

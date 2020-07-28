@@ -4,14 +4,13 @@ import PropTypes from 'prop-types';
 import { forbidExtraProps } from 'airbnb-prop-types';
 import omit from 'lodash/omit';
 
+import format from 'date-fns/format';
 import DayPickerRangeController from '../src/components/DayPickerRangeController';
 
 import ScrollableOrientationShape from '../src/shapes/ScrollableOrientationShape';
 
 import { START_DATE, END_DATE, HORIZONTAL_ORIENTATION } from '../src/constants';
 import isInclusivelyAfterDay from '../src/utils/isInclusivelyAfterDay';
-
-import format from 'date-fns/format';
 
 const propTypes = forbidExtraProps({
   // example props for the demo
@@ -29,6 +28,7 @@ const propTypes = forbidExtraProps({
   isOutsideRange: PropTypes.func,
   isDayBlocked: PropTypes.func,
   isDayHighlighted: PropTypes.func,
+  daysViolatingMinNightsCanBeClicked: PropTypes.bool,
 
   // DayPicker props
   enableOutsideDays: PropTypes.bool,
@@ -43,6 +43,8 @@ const propTypes = forbidExtraProps({
 
   navPrev: PropTypes.node,
   navNext: PropTypes.node,
+  renderNavPrevButton: PropTypes.func,
+  renderNavNextButton: PropTypes.func,
 
   onPrevMonthClick: PropTypes.func,
   onNextMonthClick: PropTypes.func,
@@ -50,12 +52,13 @@ const propTypes = forbidExtraProps({
   renderCalendarDay: PropTypes.func,
   renderDayContents: PropTypes.func,
   renderKeyboardShortcutsButton: PropTypes.func,
+  renderKeyboardShortcutsPanel: PropTypes.func,
 
   // i18n
   monthFormat: PropTypes.string,
 
   isRTL: PropTypes.bool,
-  locale: PropTypes.string
+  locale: PropTypes.string,
 });
 
 const defaultProps = {
@@ -74,9 +77,10 @@ const defaultProps = {
   renderDayContents: null,
   minimumNights: 1,
   isDayBlocked: () => false,
-  isOutsideRange: day => !isInclusivelyAfterDay(day, new Date()),
+  isOutsideRange: (day) => !isInclusivelyAfterDay(day, new Date()),
   isDayHighlighted: () => false,
   enableOutsideDays: false,
+  daysViolatingMinNightsCanBeClicked: false,
 
   // calendar presentation and interaction related props
   orientation: HORIZONTAL_ORIENTATION,
@@ -92,10 +96,13 @@ const defaultProps = {
   renderMonthText: null,
   renderMonthElement: null,
   renderKeyboardShortcutsButton: undefined,
+  renderKeyboardShortcutsPanel: undefined,
 
   // navigation related props
   navPrev: null,
   navNext: null,
+  renderNavPrevButton: null,
+  renderNavNextButton: null,
   onPrevMonthClick() {},
   onNextMonthClick() {},
 
@@ -108,6 +115,7 @@ class DayPickerRangeControllerWrapper extends React.Component {
     super(props);
 
     this.state = {
+      errorMessage: null,
       focusedInput: props.autoFocusEndDate ? END_DATE : START_DATE,
       startDate: props.initialStartDate,
       endDate: props.initialEndDate,
@@ -118,7 +126,19 @@ class DayPickerRangeControllerWrapper extends React.Component {
   }
 
   onDatesChange({ startDate, endDate }) {
-    this.setState({ startDate, endDate });
+    const { daysViolatingMinNightsCanBeClicked, minimumNights } = this.props;
+    let doesNotMeetMinNights = false;
+    if (daysViolatingMinNightsCanBeClicked && startDate && endDate) {
+      const dayDiff = endDate.diff(startDate.clone().startOf('day').hour(12), 'days');
+      doesNotMeetMinNights = dayDiff < minimumNights && dayDiff >= 0;
+    }
+    this.setState({
+      startDate,
+      endDate: doesNotMeetMinNights ? null : endDate,
+      errorMessage: doesNotMeetMinNights
+        ? 'That day does not meet the minimum nights requirement'
+        : null,
+    });
   }
 
   onFocusChange(focusedInput) {
@@ -129,8 +149,13 @@ class DayPickerRangeControllerWrapper extends React.Component {
   }
 
   render() {
-    const { showInputs } = this.props;
-    const { focusedInput, startDate, endDate } = this.state;
+    const { renderCalendarInfo: renderCalendarInfoProp, showInputs } = this.props;
+    const {
+      errorMessage,
+      focusedInput,
+      startDate,
+      endDate,
+    } = this.state;
 
     const props = omit(this.props, [
       'autoFocus',
@@ -143,14 +168,16 @@ class DayPickerRangeControllerWrapper extends React.Component {
     const startDateString = startDate && format(startDate, 'yyyy-MM-dd');
     const endDateString = endDate && format(endDate, 'yyyy-MM-dd');
 
+    const renderCalendarInfo = errorMessage ? () => <div>{errorMessage}</div> : renderCalendarInfoProp;
+
     return (
       <div style={{ height: '100%' }}>
-        {showInputs &&
+        {showInputs && (
           <div style={{ marginBottom: 16 }}>
             <input type="text" name="start date" value={startDateString} readOnly />
             <input type="text" name="end date" value={endDateString} readOnly />
           </div>
-        }
+        )}
 
         <DayPickerRangeController
           {...props}
@@ -159,6 +186,7 @@ class DayPickerRangeControllerWrapper extends React.Component {
           focusedInput={focusedInput}
           startDate={startDate}
           endDate={endDate}
+          renderCalendarInfo={renderCalendarInfo}
         />
       </div>
     );

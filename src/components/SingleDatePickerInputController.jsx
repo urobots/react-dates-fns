@@ -2,6 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { forbidExtraProps, nonNegativeInteger } from 'airbnb-prop-types';
+import format from 'date-fns/format';
+import addHours from 'date-fns/addHours';
+import startOfDay from 'date-fns/startOfDay';
+import parse from 'date-fns/parse';
+import parseISO from 'date-fns/parseISO';
+import isValid from 'date-fns/isValid';
 import openDirectionShape from '../shapes/OpenDirectionShape';
 
 import { SingleDatePickerInputPhrases } from '../defaultPhrases';
@@ -15,12 +21,6 @@ import DisabledShape from '../shapes/DisabledShape';
 import toLocalizedDateString from '../utils/toLocalizedDateString';
 import isInclusivelyAfterDay from '../utils/isInclusivelyAfterDay';
 import getLocale from '../utils/getLocale';
-
-import format from 'date-fns/format';
-import addHours from 'date-fns/addHours';
-import startOfDay from 'date-fns/startOfDay';
-import parse from 'date-fns/parse';
-import parseISO from 'date-fns/parseISO';
 
 import {
   ICON_BEFORE_POSITION,
@@ -57,6 +57,7 @@ const propTypes = forbidExtraProps({
   keepOpenOnDateSelect: PropTypes.bool,
   reopenPickerOnClearDate: PropTypes.bool,
   isOutsideRange: PropTypes.func,
+  isDayBlocked: PropTypes.func,
   displayFormat: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
 
   onClose: PropTypes.func,
@@ -73,7 +74,7 @@ const propTypes = forbidExtraProps({
   phrases: PropTypes.shape(getPhrasePropTypes(SingleDatePickerInputPhrases)),
   locale: PropTypes.string,
 
-  isRTL: PropTypes.bool
+  isRTL: PropTypes.bool,
 });
 
 const defaultProps = {
@@ -101,7 +102,8 @@ const defaultProps = {
 
   keepOpenOnDateSelect: false,
   reopenPickerOnClearDate: false,
-  isOutsideRange: day => !isInclusivelyAfterDay(day, addHours(startOfDay(new Date()), 12)),
+  isOutsideRange: (day) => !isInclusivelyAfterDay(day, addHours(startOfDay(new Date()), 12)),
+  isDayBlocked: () => false,
   displayFormat: () => 'P',
 
   onClose() {},
@@ -118,7 +120,7 @@ const defaultProps = {
   phrases: SingleDatePickerInputPhrases,
   locale: null,
 
-  isRTL: false
+  isRTL: false,
 };
 
 /** @extends React.Component */
@@ -135,6 +137,7 @@ export default class SingleDatePickerInputController extends React.PureComponent
   onChange(dateString) {
     const {
       isOutsideRange,
+      isDayBlocked,
       keepOpenOnDateSelect,
       onDateChange,
       onFocusChange,
@@ -149,8 +152,12 @@ export default class SingleDatePickerInputController extends React.PureComponent
       newDate = parseISO(dateString);
     }
 
-    const isValid = !isOutsideRange(newDate);
-    if (isValid) {
+    if (!isValid(newDate)) {
+      newDate = null;
+    }
+
+    const isNewDateValid = newDate && !isOutsideRange(newDate) && !isDayBlocked(newDate);
+    if (isNewDateValid) {
       onDateChange(newDate);
       if (!keepOpenOnDateSelect) {
         onFocusChange({ focused: false });
@@ -193,7 +200,7 @@ export default class SingleDatePickerInputController extends React.PureComponent
   getDateString(date) {
     const displayFormat = this.getDisplayFormat();
     if (date && displayFormat) {
-      return format(date, displayFormat, {locale: getLocale(this.props.locale)});
+      return format(date, displayFormat, { locale: getLocale(this.props.locale) });
     }
     return toLocalizedDateString(date, null, this.props.locale);
   }
@@ -234,7 +241,7 @@ export default class SingleDatePickerInputController extends React.PureComponent
       block,
       small,
       regular,
-      verticalSpacing
+      verticalSpacing,
     } = this.props;
 
     const displayValue = this.getDateString(date);

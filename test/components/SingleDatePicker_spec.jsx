@@ -56,6 +56,21 @@ describe('SingleDatePicker', () => {
           expect(wrapper.find(SingleDatePickerInputController).prop('isOutsideRange')).to.equal(isOutsideRange);
         });
       });
+
+      describe('props.isDayBlocked is defined', () => {
+        it('should pass props.isDayBlocked to <SingleDatePickerInputController>', () => {
+          const isDayBlocked = sinon.stub();
+          const wrapper = shallow((
+            <SingleDatePicker
+              id="date"
+              onDateChange={() => {}}
+              onFocusChange={() => {}}
+              isDayBlocked={isDayBlocked}
+            />
+          )).dive();
+          expect(wrapper.find(SingleDatePickerInputController).prop('isDayBlocked')).to.equal(isDayBlocked);
+        });
+      });
     });
 
     describe('DayPickerSingleDateController', () => {
@@ -360,7 +375,6 @@ describe('SingleDatePicker', () => {
       wrapper.instance().onInputFocus({ focused: true });
       expect(onDayPickerFocusSpy.callCount).to.equal(1);
     });
-
 
     it('calls onDayPickerFocus if readOnly and keepFocusOnInput', () => {
       const wrapper = shallow((

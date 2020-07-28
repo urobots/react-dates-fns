@@ -123,19 +123,19 @@ describe('getCalendarMonthWeeks', () => {
   describe('enableOutsideDays arg is false', () => {
     it('first non-null element is first of the month', () => {
       const firstOfMonth = startOfMonth(today);
-      const firstNonNullDay = weeks[0].filter(day => day)[0];
+      const firstNonNullDay = weeks[0].filter((day) => day)[0];
       expect(isSameDay(firstOfMonth, firstNonNullDay)).to.equal(true);
     });
 
     it('last non-null element is last of the month', () => {
       const lastOfMonth = endOfMonth(today);
-      const lastWeek = weeks[weeks.length - 1].filter(day => day);
+      const lastWeek = weeks[weeks.length - 1].filter((day) => day);
       const lastNonNullDay = lastWeek[lastWeek.length - 1];
       expect(isSameDay(lastOfMonth, lastNonNullDay)).to.equal(true);
     });
 
     it('number of non-null elements is equal to number of days in month', () => {
-      const daysInCalendarMonthWeeks = weeks.reduce((a, b) => a + b.filter(day => day).length, 0);
+      const daysInCalendarMonthWeeks = weeks.reduce((a, b) => a + b.filter((day) => day).length, 0);
       expect(daysInCalendarMonthWeeks).to.equal(getDaysInMonth(today));
     });
   });
@@ -144,14 +144,14 @@ describe('getCalendarMonthWeeks', () => {
     it('contains first of the month', () => {
       const firstOfMonth = startOfMonth(today);
       const containsFirstOfMonth = weeksWithOutsideDays[0]
-        .filter(day => isSameDay(firstOfMonth, day)).length > 0;
+        .filter((day) => isSameDay(firstOfMonth, day)).length > 0;
       expect(containsFirstOfMonth).to.equal(true);
     });
 
     it('last week contains last of the month', () => {
       const lastOfMonth = endOfMonth(today);
       const containsLastOfMonth = weeks[weeksWithOutsideDays.length - 1]
-        .filter(day => isSameDay(lastOfMonth, day)).length > 0;
+        .filter((day) => isSameDay(lastOfMonth, day)).length > 0;
       expect(containsLastOfMonth).to.equal(true);
     });
 
@@ -160,7 +160,7 @@ describe('getCalendarMonthWeeks', () => {
       const lastOfMonth = endOfMonth(december2016);
       const weeksInDecember = getCalendarMonthWeeks(december2016);
       const containsLastOfMonth = weeksInDecember[weeksInDecember.length - 1]
-        .filter(day => isSameDay(lastOfMonth, day)).length > 0;
+        .filter((day) => isSameDay(lastOfMonth, day)).length > 0;
       expect(containsLastOfMonth).to.equal(true);
     });
 
@@ -169,7 +169,7 @@ describe('getCalendarMonthWeeks', () => {
       const lastOfMonth = endOfMonth(april2017);
       const weeksInApril = getCalendarMonthWeeks(april2017);
       const containsLastOfMonth = weeksInApril[weeksInApril.length - 1]
-        .filter(day => isSameDay(lastOfMonth, day)).length > 0;
+        .filter((day) => isSameDay(lastOfMonth, day)).length > 0;
       expect(containsLastOfMonth).to.equal(true);
     });
 
@@ -178,7 +178,7 @@ describe('getCalendarMonthWeeks', () => {
       const lastOfMonth = endOfMonth(september2016);
       const weeksInSeptember = getCalendarMonthWeeks(september2016);
       const containsLastOfMonth = weeksInSeptember[weeksInSeptember.length - 1]
-        .filter(day => isSameDay(lastOfMonth, day)).length > 0;
+        .filter((day) => isSameDay(lastOfMonth, day)).length > 0;
       expect(containsLastOfMonth).to.equal(true);
     });
 

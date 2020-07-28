@@ -4,6 +4,12 @@ import { forbidExtraProps, mutuallyExclusiveProps, nonNegativeInteger } from 'ai
 import { css, withStyles, withStylesPropTypes } from 'react-with-styles';
 import { addEventListener } from 'consolidated-events';
 
+import subMonths from 'date-fns/subMonths';
+import addMonths from 'date-fns/addMonths';
+import addHours from 'date-fns/addHours';
+import startOfDay from 'date-fns/startOfDay';
+import setYear from 'date-fns/setYear';
+import setMonth from 'date-fns/setMonth';
 import { CalendarDayPhrases } from '../defaultPhrases';
 import getPhrasePropTypes from '../utils/getPhrasePropTypes';
 import noflip from '../utils/noflip';
@@ -21,13 +27,6 @@ import isSameMonthAndYear from '../utils/isSameMonthAndYear';
 import ModifiersShape from '../shapes/ModifiersShape';
 import ScrollableOrientationShape from '../shapes/ScrollableOrientationShape';
 import DayOfWeekShape from '../shapes/DayOfWeekShape';
-
-import subMonths from 'date-fns/subMonths';
-import addMonths from 'date-fns/addMonths';
-import addHours from 'date-fns/addHours';
-import startOfDay from 'date-fns/startOfDay';
-import setYear from 'date-fns/setYear';
-import setMonth from 'date-fns/setMonth';
 
 import {
   HORIZONTAL_ORIENTATION,
@@ -267,7 +266,7 @@ class CalendarMonthGrid extends React.PureComponent {
       transitionDuration,
       verticalBorderSpacing,
       setMonthTitleHeight,
-      locale
+      locale,
     } = this.props;
 
     const { months } = this.state;
@@ -401,14 +400,6 @@ export default withStyles(({
 
   CalendarMonthGrid__vertical_scrollable: {
     margin: '0 auto',
-    overflowY: 'scroll',
-    ...(noScrollBarOnVerticalScrollable && {
-      '-webkitOverflowScrolling': 'touch',
-      '::-webkit-scrollbar': {
-        '-webkit-appearance': 'none',
-        display: 'none',
-      },
-    }),
   },
 
   CalendarMonthGrid_month__horizontal: {

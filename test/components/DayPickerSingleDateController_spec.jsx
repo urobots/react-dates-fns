@@ -3,16 +3,6 @@ import { expect } from 'chai';
 import { shallow } from 'enzyme';
 import sinon from 'sinon-sandbox';
 
-import DayPicker from '../../src/components/DayPicker';
-import DayPickerSingleDateController from '../../src/components/DayPickerSingleDateController';
-
-import toISODateString from '../../src/utils/toISODateString';
-import toISOMonthString from '../../src/utils/toISOMonthString';
-import * as isDayVisible from '../../src/utils/isDayVisible';
-import getVisibleDays from '../../src/utils/getVisibleDays';
-
-import { VERTICAL_SCROLLABLE } from '../../src/constants';
-
 import startOfDay from 'date-fns/startOfDay';
 import startOfWeek from 'date-fns/startOfWeek';
 import startOfMonth from 'date-fns/startOfMonth';
@@ -27,13 +17,20 @@ import setDay from 'date-fns/setDay';
 import isSameDay from 'date-fns/isSameDay';
 import getMonth from 'date-fns/getMonth';
 import getYear from 'date-fns/getYear';
-
+import { VERTICAL_SCROLLABLE } from '../../src/constants';
+import getVisibleDays from '../../src/utils/getVisibleDays';
+import * as isDayVisible from '../../src/utils/isDayVisible';
+import toISOMonthString from '../../src/utils/toISOMonthString';
+import toISODateString from '../../src/utils/toISODateString';
+import DayPickerSingleDateController from '../../src/components/DayPickerSingleDateController';
+import DayPicker from '../../src/components/DayPicker';
+import DayPickerNavigation from '../../src/components/DayPickerNavigation';
 
 // Set to noon to mimic how days in the picker are configured internally
 const today = addHours(startOfDay(new Date()), 12);
 
 function getCallsByModifier(stub, modifier) {
-  return stub.getCalls().filter(call => call.args[call.args.length - 1] === modifier);
+  return stub.getCalls().filter((call) => call.args[call.args.length - 1] === modifier);
 }
 
 describe('DayPickerSingleDateController', () => {
@@ -1180,6 +1177,54 @@ describe('DayPickerSingleDateController', () => {
       const modifiers = wrapper.instance().addModifier(updatedDays, nextMonth, modifierToAdd);
       expect(Array.from(modifiers[nextMonthISO][nextMonthDayISO])).to.contain(modifierToAdd);
     });
+
+    it('return value now has modifier arg for day after getting next scrollable months', () => {
+      const modifierToAdd = 'foo';
+      const numberOfMonths = 2;
+      const nextMonth = addMonths(today, numberOfMonths);
+      const nextMonthISO = toISOMonthString(nextMonth);
+      const nextMonthDayISO = toISODateString(nextMonth);
+      const updatedDays = {
+        [nextMonthISO]: { [nextMonthDayISO]: new Set(['bar', 'baz']) },
+      };
+      const wrapper = shallow((
+        <DayPickerSingleDateController
+          onDatesChange={sinon.stub()}
+          onFocusChange={sinon.stub()}
+          numberOfMonths={numberOfMonths}
+          orientation={VERTICAL_SCROLLABLE}
+        />
+      )).instance();
+      let modifiers = wrapper.addModifier(updatedDays, nextMonth, modifierToAdd);
+      expect(Array.from(modifiers[nextMonthISO][nextMonthDayISO])).to.not.contain(modifierToAdd);
+      wrapper.onGetNextScrollableMonths();
+      modifiers = wrapper.addModifier(updatedDays, nextMonth, modifierToAdd);
+      expect(Array.from(modifiers[nextMonthISO][nextMonthDayISO])).to.contain(modifierToAdd);
+    });
+
+    it('return value now has modifier arg for day after getting previous scrollable months', () => {
+      const modifierToAdd = 'foo';
+      const numberOfMonths = 2;
+      const pastDateAfterMultiply = subMonths(today, numberOfMonths);
+      const monthISO = toISOMonthString(pastDateAfterMultiply);
+      const dayISO = toISODateString(pastDateAfterMultiply);
+      const updatedDays = {
+        [monthISO]: { [dayISO]: new Set(['bar', 'baz']) },
+      };
+      const wrapper = shallow((
+        <DayPickerSingleDateController
+          onDatesChange={sinon.stub()}
+          onFocusChange={sinon.stub()}
+          numberOfMonths={numberOfMonths}
+          orientation={VERTICAL_SCROLLABLE}
+        />
+      )).instance();
+      let modifiers = wrapper.addModifier(updatedDays, pastDateAfterMultiply, modifierToAdd);
+      expect(Array.from(modifiers[monthISO][dayISO])).to.not.contain(modifierToAdd);
+      wrapper.onGetPrevScrollableMonths();
+      modifiers = wrapper.addModifier(updatedDays, pastDateAfterMultiply, modifierToAdd);
+      expect(Array.from(modifiers[monthISO][dayISO])).to.contain(modifierToAdd);
+    });
   });
 
   describe('#deleteModifier', () => {
@@ -1517,6 +1562,18 @@ describe('DayPickerSingleDateController', () => {
         ));
         const dayPicker = wrapper.find(DayPicker);
         expect(isSameDay(dayPicker.props().initialVisibleMonth(), today)).to.equal(true);
+      });
+    });
+
+    describe('noNavButtons prop', () => {
+      it('renders navigation button', () => {
+        const wrapper = shallow(<DayPickerSingleDateController />).dive().dive();
+        expect(wrapper.find(DayPickerNavigation)).to.have.lengthOf(1);
+      });
+
+      it('does not render navigation button when noNavButtons prop applied', () => {
+        const wrapper = shallow(<DayPickerSingleDateController noNavButtons />).dive().dive();
+        expect(wrapper.find(DayPickerNavigation)).to.have.lengthOf(0);
       });
     });
   });

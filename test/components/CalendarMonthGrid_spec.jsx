@@ -3,13 +3,12 @@ import { expect } from 'chai';
 import { shallow } from 'enzyme';
 import sinon from 'sinon-sandbox';
 
+import getMonth from 'date-fns/getMonth';
+import format from 'date-fns/format';
 import CalendarMonth from '../../src/components/CalendarMonth';
 import CalendarMonthGrid from '../../src/components/CalendarMonthGrid';
 
 import getTransformStyles from '../../src/utils/getTransformStyles';
-
-import getMonth from 'date-fns/getMonth';
-import format from 'date-fns/format';
 
 describe('CalendarMonthGrid', () => {
   it('the number of CalendarMonths rendered matches props.numberOfMonths + 2', () => {
@@ -41,7 +40,7 @@ describe('CalendarMonthGrid', () => {
     const { months } = wrapper.state();
 
     const collisions = months
-      .map(m => format(m, 'yyyy-MM'))
+      .map((m) => format(m, 'yyyy-MM'))
       .reduce((acc, m) => ({ ...acc, [m]: true }), {});
 
     expect(Object.keys(collisions).length).to.equal(months.length);
@@ -62,7 +61,7 @@ describe('CalendarMonthGrid', () => {
     const { months } = wrapper.state();
 
     const collisions = months
-      .map(m => format(m, 'yyyy-MM'))
+      .map((m) => format(m, 'yyyy-MM'))
       .reduce((acc, m) => ({ ...acc, [m]: true }), {});
 
     expect(Object.keys(collisions).length).to.equal(months.length);

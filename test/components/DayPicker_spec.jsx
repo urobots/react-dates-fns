@@ -13,6 +13,7 @@ import startOfMonth from 'date-fns/startOfMonth';
 import startOfWeek from 'date-fns/startOfWeek';
 import endOfWeek from 'date-fns/endOfWeek';
 import isSameDay from 'date-fns/isSameDay';
+import isSameMonth from 'date-fns/isSameMonth';
 
 import * as isDayVisible from '../../src/utils/isDayVisible';
 
@@ -24,6 +25,7 @@ import {
   HORIZONTAL_ORIENTATION,
   VERTICAL_ORIENTATION,
   VERTICAL_SCROLLABLE,
+  NAV_POSITION_BOTTOM,
 } from '../../src/constants';
 
 const today = new Date();
@@ -45,6 +47,23 @@ describe('DayPicker', () => {
         const weekHeaders = wrapper.find('.DayPicker__week-header');
         weekHeaders.forEach((weekHeader) => {
           expect(weekHeader.find('li')).to.have.lengthOf(7);
+        });
+      });
+
+      describe('props.renderWeekHeaderElement', () => {
+        it('there are 7 custom elements on each .DayPicker__week-header class', () => {
+          const testWeekHeaderClassName = 'test-week-header';
+          const wrapper = shallow(
+            <DayPicker
+              renderWeekHeaderElement={
+                (day) => (<strong className={testWeekHeaderClassName}>{day}</strong>)
+              }
+            />,
+          ).dive();
+          const weekHeaders = wrapper.find('.DayPicker__week-header');
+          weekHeaders.forEach((weekHeader) => {
+            expect(weekHeader.find(`.${testWeekHeaderClassName}`)).to.have.lengthOf(7);
+          });
         });
       });
 
@@ -98,6 +117,32 @@ describe('DayPicker', () => {
       });
     });
 
+    describe('DayPickerNavigation', () => {
+      it('is rendered before CalendarMonthGrid in DayPicker_focusRegion', () => {
+        const wrapper = shallow(<DayPicker />).dive();
+        expect(wrapper.find(DayPickerNavigation)).to.have.lengthOf(1);
+        expect(
+          wrapper
+            .find('[className^="DayPicker_focusRegion"]')
+            .childAt(0)
+            .type(),
+        ).to.equal(DayPickerNavigation);
+      });
+
+      describe('navPosition === NAV_POSITION_BOTTOM', () => {
+        it('is rendered after CalendarMonthGrid in DayPicker_focusRegion', () => {
+          const wrapper = shallow(<DayPicker navPosition={NAV_POSITION_BOTTOM} />).dive();
+          expect(wrapper.find(DayPickerNavigation)).to.have.lengthOf(1);
+          expect(
+            wrapper
+              .find('[className^="DayPicker_focusRegion"]')
+              .childAt(1)
+              .type(),
+          ).to.equal(DayPickerNavigation);
+        });
+      });
+    });
+
     describe('DayPickerKeyboardShortcuts', () => {
       it('component exists if state.isTouchDevice is false and hideKeyboardShortcutsPanel is false', () => {
         const wrapper = shallow(<DayPicker hideKeyboardShortcutsPanel={false} />).dive();
@@ -126,6 +171,18 @@ describe('DayPicker', () => {
         expect(dayPickerKeyboardShortcuts.prop('renderKeyboardShortcutsButton'))
           .to
           .eql(testRenderKeyboardShortcutsButton);
+      });
+
+      it('component exists with custom panel render function if renderKeyboardShortcutsPanel is passed down', () => {
+        const testRenderKeyboardShortcutsPanel = () => {};
+        const wrapper = shallow(
+          <DayPicker renderKeyboardShortcutsPanel={testRenderKeyboardShortcutsPanel} />,
+        ).dive();
+        const dayPickerKeyboardShortcuts = wrapper.find(DayPickerKeyboardShortcuts);
+        expect(dayPickerKeyboardShortcuts).to.have.lengthOf(1);
+        expect(dayPickerKeyboardShortcuts.prop('renderKeyboardShortcutsPanel'))
+          .to
+          .eql(testRenderKeyboardShortcutsPanel);
       });
     });
   });
@@ -161,13 +218,32 @@ describe('DayPicker', () => {
   });
 
   describe('props.orientation === VERTICAL_SCROLLABLE', () => {
-    it('uses multiplyScrollableMonths instead of onNextMonthClick', () => {
+    it('renders two DayPickerNavigations', () => {
       const wrapper = shallow(
         <DayPicker orientation={VERTICAL_SCROLLABLE} />,
         { disableLifecycleMethods: false },
       ).dive();
-      const nav = wrapper.find(DayPickerNavigation);
-      expect(nav.prop('onNextMonthClick')).to.equal(wrapper.instance().multiplyScrollableMonths);
+      expect(wrapper.find(DayPickerNavigation)).to.have.length(2);
+    });
+
+    it('uses getNextScrollableMonths instead of onNextMonthClick', () => {
+      const wrapper = shallow(
+        <DayPicker orientation={VERTICAL_SCROLLABLE} />,
+        { disableLifecycleMethods: false },
+      ).dive();
+      expect(wrapper.find(DayPickerNavigation)).to.have.length(2);
+      const nav = wrapper.find(DayPickerNavigation).get(1);
+      expect(nav.props.onNextMonthClick).to.equal(wrapper.instance().getNextScrollableMonths);
+    });
+
+    it('uses getPrevScrollableMonths instead of onNextMonthClick', () => {
+      const wrapper = shallow(
+        <DayPicker orientation={VERTICAL_SCROLLABLE} />,
+        { disableLifecycleMethods: false },
+      ).dive();
+      expect(wrapper.find(DayPickerNavigation)).to.have.length(2);
+      const nav = wrapper.find(DayPickerNavigation).get(0);
+      expect(nav.props.onPrevMonthClick).to.equal(wrapper.instance().getPrevScrollableMonths);
     });
   });
 
@@ -266,7 +342,7 @@ describe('DayPicker', () => {
         });
 
         it('arg is 1 month before focusedDate', () => {
-          const oneMonthBefore = subMonths(today,1);
+          const oneMonthBefore = subMonths(today, 1);
           const maybeTransitionPrevMonthSpy = sinon.spy(PureDayPicker.prototype, 'maybeTransitionPrevMonth');
           const wrapper = shallow(<DayPicker />).dive();
           wrapper.setState({
@@ -746,17 +822,20 @@ describe('DayPicker', () => {
     });
   });
 
-  describe('#multiplyScrollableMonths', () => {
+  describe('#getNextScrollableMonths', () => {
     it('increments scrollableMonthMultiple', () => {
       const wrapper = shallow(<DayPicker />).dive();
-      wrapper.instance().multiplyScrollableMonths(event);
+      wrapper.instance().getNextScrollableMonths(event);
       expect(wrapper.state().scrollableMonthMultiple).to.equal(2);
     });
+  });
 
-    it('increments scrollableMonthMultiple without an event', () => {
+  describe('#getPrevScrollableMonths', () => {
+    it('increments scrollableMonthMultiple and updates currentMonth', () => {
       const wrapper = shallow(<DayPicker />).dive();
-      wrapper.instance().multiplyScrollableMonths();
+      wrapper.instance().getPrevScrollableMonths();
       expect(wrapper.state().scrollableMonthMultiple).to.equal(2);
+      expect(isSameMonth(wrapper.state().currentMonth, subMonths(new Date(), 2))).to.equal(true);
     });
   });
 
@@ -813,6 +892,15 @@ describe('DayPicker', () => {
     });
   });
 
+  // describe('#weekHeaderNames', () => {
+  //   it('returns weekheaders in fr', () => {
+  //     const INITIAL_MONTH = moment().locale('fr');
+  //     const wrapper = shallow(<DayPicker initialVisibleMonth={() => INITIAL_MONTH} />).dive();
+  //     const instance = wrapper.instance();
+  //     expect(instance.getWeekHeaders()).to.be.eql(INITIAL_MONTH.localeData().weekdaysMin());
+  //   });
+  // });
+
   describe.skip('life cycle methods', () => {
     let adjustDayPickerHeightSpy;
     beforeEach(() => {
@@ -827,10 +915,45 @@ describe('DayPicker', () => {
         });
       });
 
+      it('does not update state.currentMonthScrollTop', () => {
+        sinon.spy(DayPicker.prototype, 'setTransitionContainerRef');
+        const wrapper = mount(<DayPicker orientation={HORIZONTAL_ORIENTATION} />);
+        expect(wrapper.state().currentMonthScrollTop).to.equal(null);
+      });
+
       describe('props.orientation === VERTICAL_ORIENTATION', () => {
         it('does not call adjustDayPickerHeight', () => {
           mount(<DayPicker orientation={VERTICAL_ORIENTATION} />);
           expect(adjustDayPickerHeightSpy.called).to.equal(false);
+        });
+
+        it('does not update state.currentMonthScrollTop', () => {
+          sinon.spy(DayPicker.prototype, 'setTransitionContainerRef');
+          const wrapper = mount(<DayPicker orientation={VERTICAL_ORIENTATION} />);
+          expect(wrapper.state().currentMonthScrollTop).to.equal(null);
+        });
+      });
+
+      describe('props.orientation === VERTICAL_SCROLLABLE', () => {
+        it('updates state.currentMonthScrollTop', () => {
+          sinon.spy(DayPicker.prototype, 'setTransitionContainerRef');
+          const wrapper = mount(<DayPicker orientation={VERTICAL_SCROLLABLE} />);
+          expect(wrapper.state().currentMonthScrollTop).to.not.equal(null);
+        });
+      });
+    });
+
+    describe('#componentWillReceiveProps', () => {
+      describe('props.orientation === VERTICAL_SCROLLABLE', () => {
+        it('updates state.currentMonthScrollTop', () => {
+          sinon.spy(DayPicker.prototype, 'setTransitionContainerRef');
+          const wrapper = mount(<DayPicker orientation={VERTICAL_SCROLLABLE} />);
+          const prevCurrentMonthScrollTop = wrapper.state().currentMonthScrollTop;
+          wrapper.setState({
+            currentMonth: subMonths(new Date(), 1),
+          });
+          wrapper.setProps({ initialVisibleMonth: () => subMonths(new Date(), 1) });
+          expect(wrapper.state().currentMonthScrollTop).to.not.equal(prevCurrentMonthScrollTop);
         });
       });
     });
@@ -892,6 +1015,28 @@ describe('DayPicker', () => {
             monthTransition: null,
           });
           expect(updateStateAfterMonthTransitionSpy.calledOnce).to.equal(false);
+        });
+      });
+
+      describe('props.orientation === VERTICAL_SCROLLABLE', () => {
+        it('does not update transitionContainer ref`s scrollTop currentMonth stays the same', () => {
+          sinon.spy(DayPicker.prototype, 'setTransitionContainerRef');
+          const wrapper = mount(<DayPicker orientation={VERTICAL_SCROLLABLE} />);
+          const prevScrollTop = wrapper.transitionContainer.scrollTop;
+          wrapper.setState({
+            currentMonth: moment(),
+          });
+          expect(wrapper.transitionContainer).to.have.property('scrollTop', prevScrollTop);
+        });
+
+        it('updates transitionContainer ref`s scrollTop currentMonth changes', () => {
+          sinon.spy(DayPicker.prototype, 'setTransitionContainerRef');
+          const wrapper = mount(<DayPicker orientation={VERTICAL_SCROLLABLE} />);
+          const prevScrollTop = wrapper.transitionContainer.scrollTop;
+          wrapper.setState({
+            currentMonth: moment().subtract(1, 'months'),
+          });
+          expect(wrapper.transitionContainer).to.not.have.property('scrollTop', prevScrollTop);
         });
       });
 

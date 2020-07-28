@@ -4,14 +4,13 @@ import sinon from 'sinon-sandbox';
 import { shallow, mount } from 'enzyme';
 import { Portal } from 'react-portal';
 
+import addDays from 'date-fns/addDays';
+import isSameDay from 'date-fns/isSameDay';
+import parseISO from 'date-fns/parseISO';
 import DateRangePicker, { PureDateRangePicker } from '../../src/components/DateRangePicker';
 
 import DateRangePickerInputController from '../../src/components/DateRangePickerInputController';
 import DayPickerRangeController from '../../src/components/DayPickerRangeController';
-
-import addDays from 'date-fns/addDays';
-import isSameDay from 'date-fns/isSameDay';
-import parseISO from 'date-fns/parseISO';
 
 import {
   HORIZONTAL_ORIENTATION,
@@ -110,6 +109,23 @@ describe('DateRangePicker', () => {
           )).dive();
           expect(wrapper.find(Portal)).to.have.length(0);
         });
+      });
+    });
+
+    describe('props.isDayBlocked is defined', () => {
+      it('should pass props.isDayBlocked to <DateRangePickerInputController>', () => {
+        const isDayBlocked = sinon.stub();
+        const wrapper = shallow((
+          <DateRangePicker {...requiredProps} isDayBlocked={isDayBlocked} />
+        )).dive();
+        expect(wrapper.find(DateRangePickerInputController).prop('isDayBlocked')).to.equal(isDayBlocked);
+      });
+
+      it('is a noop when omitted', () => {
+        const wrapper = shallow((
+          <DateRangePicker {...requiredProps} />
+        )).dive();
+        expect(wrapper.find(DateRangePickerInputController).prop('isDayBlocked')).not.to.throw();
       });
     });
 
@@ -587,7 +603,6 @@ describe('DateRangePicker', () => {
     expect(onOutsideClick.callCount).to.equal(1);
   });
 
-
   it('tabbing within itself does not behave as an outside click', () => {
     const target = sinon.stub();
     const onOutsideClick = sinon.stub();
@@ -710,7 +725,7 @@ describe('DateRangePicker', () => {
           const wrapper = shallow((
             <DateRangePicker
               {...requiredProps}
-              startDateOffset={ (date) => { date.setDate(date.getDate() - 5); return date; }}
+              startDateOffset={(date) => { date.setDate(date.getDate() - 5); return date; }}
               onDatesChange={onDatesChangeStub}
               focusedInput={START_DATE}
             />
@@ -730,7 +745,7 @@ describe('DateRangePicker', () => {
           const wrapper = shallow((
             <DateRangePicker
               {...requiredProps}
-              endDateOffset={ (date) => { date.setDate(date.getDate() - 5); return date; }}
+              endDateOffset={(date) => { date.setDate(date.getDate() - 5); return date; }}
               onDatesChange={onDatesChangeStub}
               focusedInput={START_DATE}
             />
@@ -741,6 +756,36 @@ describe('DateRangePicker', () => {
 
           expect(dayPickerEndDateOffset).to.equal(endDate);
         });
+      });
+    });
+  });
+
+  describe('minDate and maxDate props', () => {
+    describe('minDate is passed in', () => {
+      it('Should pass minDate to DayPickerRangeController', () => {
+        const minDate = parseISO('2018-10-19');
+        const wrapper = shallow((
+          <DateRangePicker
+            {...requiredProps}
+            focusedInput={START_DATE}
+            minDate={minDate}
+          />
+        )).dive();
+        expect(wrapper.find(DayPickerRangeController).props().minDate).to.equal(minDate);
+      });
+    });
+
+    describe('maxDate is passed in', () => {
+      it('Should pass maxDate to DayPickerRangeController', () => {
+        const maxDate = parseISO('2018-12-19');
+        const wrapper = shallow((
+          <DateRangePicker
+            {...requiredProps}
+            focusedInput={START_DATE}
+            maxDate={maxDate}
+          />
+        )).dive();
+        expect(wrapper.find(DayPickerRangeController).props().maxDate).to.equal(maxDate);
       });
     });
   });

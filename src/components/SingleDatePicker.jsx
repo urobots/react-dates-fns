@@ -6,6 +6,8 @@ import { addEventListener } from 'consolidated-events';
 import isTouchDevice from 'is-touch-device';
 import OutsideClickHandler from 'react-outside-click-handler';
 
+import addHours from 'date-fns/addHours';
+import startOfDay from 'date-fns/startOfDay';
 import SingleDatePickerShape from '../shapes/SingleDatePickerShape';
 import { SingleDatePickerPhrases } from '../defaultPhrases';
 
@@ -20,9 +22,6 @@ import SingleDatePickerInputController from './SingleDatePickerInputController';
 import DayPickerSingleDateController from './DayPickerSingleDateController';
 import CloseButton from './CloseButton';
 
-import addHours from 'date-fns/addHours';
-import startOfDay from 'date-fns/startOfDay';
-
 import {
   HORIZONTAL_ORIENTATION,
   VERTICAL_ORIENTATION,
@@ -35,6 +34,7 @@ import {
   INFO_POSITION_BOTTOM,
   FANG_HEIGHT_PX,
   DEFAULT_VERTICAL_SPACING,
+  NAV_POSITION_TOP,
 } from '../constants';
 
 const propTypes = forbidExtraProps({
@@ -91,8 +91,12 @@ const defaultProps = {
   horizontalMonthPadding: 13,
 
   // navigation related props
+  dayPickerNavigationInlineStyles: null,
+  navPosition: NAV_POSITION_TOP,
   navPrev: null,
   navNext: null,
+  renderNavPrevButton: null,
+  renderNavNextButton: null,
 
   onPrevMonthClick() {},
   onNextMonthClick() {},
@@ -100,6 +104,7 @@ const defaultProps = {
 
   // month presentation and interaction related props
   renderMonthText: null,
+  renderWeekHeaderElement: null,
 
   // day presentation and interaction related props
   renderCalendarDay: undefined,
@@ -107,7 +112,7 @@ const defaultProps = {
   renderMonthElement: null,
   enableOutsideDays: false,
   isDayBlocked: () => false,
-  isOutsideRange: day => !isInclusivelyAfterDay(day, addHours(startOfDay(new Date()), 12)),
+  isOutsideRange: (day) => !isInclusivelyAfterDay(day, addHours(startOfDay(new Date()), 12)),
   isDayHighlighted: () => {},
 
   // internationalization props
@@ -116,7 +121,7 @@ const defaultProps = {
   weekDayFormat: 'eee',
   phrases: SingleDatePickerPhrases,
   dayAriaLabelFormat: undefined,
-  locale: null
+  locale: null,
 };
 
 /** @extends React.Component */
@@ -397,8 +402,12 @@ class SingleDatePicker extends React.PureComponent {
       numberOfMonths,
       orientation,
       monthFormat,
+      dayPickerNavigationInlineStyles,
+      navPosition,
       navPrev,
       navNext,
+      renderNavPrevButton,
+      renderNavNextButton,
       onPrevMonthClick,
       onNextMonthClick,
       onClose,
@@ -407,6 +416,7 @@ class SingleDatePicker extends React.PureComponent {
       keepOpenOnDateSelect,
       initialVisibleMonth,
       renderMonthText,
+      renderWeekHeaderElement,
       renderCalendarDay,
       renderDayContents,
       renderCalendarInfo,
@@ -430,7 +440,7 @@ class SingleDatePicker extends React.PureComponent {
       horizontalMonthPadding,
       small,
       theme: { reactDates },
-      locale
+      locale,
     } = this.props;
     const { dayPickerContainerStyles, isDayPickerFocused, showKeyboardShortcuts } = this.state;
 
@@ -441,8 +451,11 @@ class SingleDatePicker extends React.PureComponent {
 
     const withAnyPortal = withPortal || withFullScreenPortal;
 
+    /* eslint-disable jsx-a11y/no-static-element-interactions */
+    /* eslint-disable jsx-a11y/click-events-have-key-events */
+
     return (
-      <div // eslint-disable-line jsx-a11y/no-static-element-interactions
+      <div
         ref={this.setDayPickerContainerRef}
         {...css(
           styles.SingleDatePicker_picker,
@@ -478,12 +491,17 @@ class SingleDatePicker extends React.PureComponent {
           keepOpenOnDateSelect={keepOpenOnDateSelect}
           hideKeyboardShortcutsPanel={hideKeyboardShortcutsPanel}
           initialVisibleMonth={initialVisibleMonth}
+          dayPickerNavigationInlineStyles={dayPickerNavigationInlineStyles}
+          navPosition={navPosition}
           navPrev={navPrev}
           navNext={navNext}
+          renderNavPrevButton={renderNavPrevButton}
+          renderNavNextButton={renderNavNextButton}
           onPrevMonthClick={onPrevMonthClick}
           onNextMonthClick={onNextMonthClick}
           onClose={onClose}
           renderMonthText={renderMonthText}
+          renderWeekHeaderElement={renderWeekHeaderElement}
           renderCalendarDay={renderCalendarDay}
           renderDayContents={renderDayContents}
           renderCalendarInfo={renderCalendarInfo}
@@ -521,6 +539,8 @@ class SingleDatePicker extends React.PureComponent {
         )}
       </div>
     );
+    /* eslint-enable jsx-a11y/no-static-element-interactions */
+    /* eslint-enable jsx-a11y/click-events-have-key-events */
   }
 
   render() {
@@ -555,7 +575,8 @@ class SingleDatePicker extends React.PureComponent {
       keepOpenOnDateSelect,
       styles,
       isOutsideRange,
-      locale
+      isDayBlocked,
+      locale,
     } = this.props;
 
     const { isInputFocused } = this.state;
@@ -580,6 +601,7 @@ class SingleDatePicker extends React.PureComponent {
         showDefaultInputIcon={showDefaultInputIcon}
         inputIconPosition={inputIconPosition}
         isOutsideRange={isOutsideRange}
+        isDayBlocked={isDayBlocked}
         customCloseIcon={customCloseIcon}
         customInputIcon={customInputIcon}
         date={date}
@@ -600,7 +622,7 @@ class SingleDatePicker extends React.PureComponent {
         keepOpenOnDateSelect={keepOpenOnDateSelect}
         locale={locale}
       >
-          {this.maybeRenderDayPickerWithPortal()}
+        {this.maybeRenderDayPickerWithPortal()}
       </SingleDatePickerInputController>
     );
 
@@ -612,12 +634,12 @@ class SingleDatePicker extends React.PureComponent {
           block && styles.SingleDatePicker__block,
         )}
       >
-      {enableOutsideClick && (
+        {enableOutsideClick && (
         <OutsideClickHandler onOutsideClick={this.onOutsideClick}>
           {input}
         </OutsideClickHandler>
-      )}
-      {enableOutsideClick || input}
+        )}
+        {enableOutsideClick || input}
       </div>
     );
   }

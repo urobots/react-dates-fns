@@ -31,7 +31,7 @@ describe('CustomizableCalendarDay', () => {
 
     it('contains arbitrary content if renderDay is provided', () => {
       const dayName = format(new Date(), 'dddd');
-      const renderDay = day => format(day, 'dddd');
+      const renderDay = (day) => format(day, 'dddd');
       const wrapper = shallow(<CustomizableCalendarDay renderDayContents={renderDay} />).dive();
       expect(wrapper.text()).to.equal(dayName);
     });
@@ -60,7 +60,7 @@ describe('CustomizableCalendarDay', () => {
 
     describe('aria-label', () => {
       const phrases = {};
-      const day = new Date(2017,9,10);
+      const day = new Date(2017, 9, 10);
 
       beforeEach(() => {
         phrases.chooseAvailableDate = sinon.stub().returns('chooseAvailableDate text');
@@ -156,7 +156,7 @@ describe('CustomizableCalendarDay', () => {
     });
 
     describe('event handlers', () => {
-      const day = new Date(2017,9,10);
+      const day = new Date(2017, 9, 10);
 
       let wrapper;
       beforeEach(() => {
@@ -200,7 +200,7 @@ describe('CustomizableCalendarDay', () => {
       wrapper.instance().buttonRef = { focus };
       wrapper.instance().componentDidUpdate({ isFocused: true, tabIndex: -1 });
       expect(focus.callCount).to.eq(0);
-      
+
       return new Promise((resolve) => {
         raf(() => {
           expect(focus.callCount).to.eq(1);
@@ -211,7 +211,7 @@ describe('CustomizableCalendarDay', () => {
   });
 
   describe('#onKeyDown', () => {
-    const day = new Date(2017,9,10);
+    const day = new Date(2017, 9, 10);
 
     let onDayClick;
     let wrapper;

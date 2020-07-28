@@ -2,6 +2,10 @@ import React from 'react';
 import { storiesOf } from '@storybook/react';
 import { withInfo } from '@storybook/addon-info';
 import DirectionProvider, { DIRECTIONS } from 'react-with-direction/dist/DirectionProvider';
+import startOfMonth from 'date-fns/startOfMonth';
+import endOfMonth from 'date-fns/endOfMonth';
+import addMonths from 'date-fns/addMonths';
+import subMonths from 'date-fns/subMonths';
 
 import {
   VERTICAL_ORIENTATION,
@@ -10,7 +14,7 @@ import {
 
 import DateRangePickerWrapper from '../examples/DateRangePickerWrapper';
 
-const TestInput = props => (
+const TestInput = (props) => (
   <div style={{ marginTop: 16 }}>
     <input
       {...props}
@@ -103,5 +107,12 @@ storiesOf('DateRangePicker (DRP)', module)
     <DateRangePickerWrapper
       orientation={VERTICAL_ORIENTATION}
       verticalHeight={568}
+    />
+  )))
+  .add('with navigation blocked (minDate and maxDate)', withInfo()(() => (
+    <DateRangePickerWrapper
+      minDate={subMonths(startOfMonth(new Date()), 2)}
+      maxDate={addMonths(endOfMonth(new Date()), 2)}
+      numberOfMonths={2}
     />
   )));
