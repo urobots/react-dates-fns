@@ -3,7 +3,6 @@ import getDaysInMonth from 'date-fns/getDaysInMonth';
 import getDay from 'date-fns/getDay';
 import getLocale from './getLocale';
 
-
 function getBlankDaysBeforeFirstDay(firstDayOfMonth, firstDayOfWeek) {
   const weekDayDiff = getDay(firstDayOfMonth) - firstDayOfWeek;
   return (weekDayDiff + 7) % 7;

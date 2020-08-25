@@ -121,7 +121,7 @@ class CalendarMonth extends React.PureComponent {
     this.setMonthTitleHeightTimeout = setTimeout(this.setMonthTitleHeight, 0);
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     const {
       month, enableOutsideDays, firstDayOfWeek, locale,
     } = nextProps;
@@ -192,7 +192,9 @@ class CalendarMonth extends React.PureComponent {
     } = this.props;
 
     const { weeks } = this.state;
-    const monthTitle = renderMonthText ? renderMonthText(month) : format(month, monthFormat, { locale: getLocale(locale) });
+    const monthTitle = renderMonthText
+      ? renderMonthText(month)
+      : format(month, monthFormat, { locale: getLocale(locale) });
 
     const verticalScrollable = orientation === VERTICAL_SCROLLABLE;
 
@@ -248,7 +250,9 @@ class CalendarMonth extends React.PureComponent {
                   onDayClick,
                   renderDayContents,
                   phrases,
-                  modifiers: modifiers[toISODateString(day)] instanceof Set ? modifiers[toISODateString(day)] : new Set(),
+                  modifiers: modifiers[toISODateString(day)] instanceof Set
+                    ? modifiers[toISODateString(day)]
+                    : new Set(),
                   ariaLabelFormat: dayAriaLabelFormat,
                 }))}
               </CalendarWeek>

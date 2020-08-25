@@ -146,7 +146,7 @@ class CalendarMonthGrid extends React.PureComponent {
     );
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     const { initialMonth, numberOfMonths, orientation } = nextProps;
     const { months } = this.state;
 
@@ -374,7 +374,6 @@ CalendarMonthGrid.defaultProps = defaultProps;
 export default withStyles(({
   reactDates: {
     color,
-    noScrollBarOnVerticalScrollable,
     spacing,
     zIndex,
   },

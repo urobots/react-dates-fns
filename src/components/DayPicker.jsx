@@ -298,7 +298,7 @@ class DayPicker extends React.PureComponent {
     this.setCalendarMonthWeeks(currentMonth);
   }
 
-  componentWillReceiveProps(nextProps, nextState) {
+  UNSAFE_componentWillReceiveProps(nextProps, nextState) {
     const {
       hidden,
       isFocused,
@@ -377,7 +377,7 @@ class DayPicker extends React.PureComponent {
     }
   }
 
-  componentWillUpdate() {
+  UNSAFE_componentWillUpdate() {
     const { transitionDuration } = this.props;
 
     // Calculating the dimensions trigger a DOM repaint which
@@ -825,13 +825,21 @@ class DayPicker extends React.PureComponent {
       newMonth = subMonths(newMonth, 1);
       if (onPrevMonthClick) onPrevMonthClick(newMonth);
       const newInvisibleMonth = subMonths(newMonth, 1);
-      const numberOfWeeks = getNumberOfCalendarMonthWeeks(newInvisibleMonth, firstDayOfWeek, locale);
+      const numberOfWeeks = getNumberOfCalendarMonthWeeks(
+        newInvisibleMonth,
+        firstDayOfWeek,
+        locale,
+      );
       this.calendarMonthWeeks = [numberOfWeeks, ...this.calendarMonthWeeks.slice(0, -1)];
     } else if (monthTransition === NEXT_TRANSITION) {
       newMonth = addMonths(newMonth, 1);
       if (onNextMonthClick) onNextMonthClick(newMonth);
       const newInvisibleMonth = addMonths(newMonth, numberOfMonths);
-      const numberOfWeeks = getNumberOfCalendarMonthWeeks(newInvisibleMonth, firstDayOfWeek, locale);
+      const numberOfWeeks = getNumberOfCalendarMonthWeeks(
+        newInvisibleMonth,
+        firstDayOfWeek,
+        locale,
+      );
       this.calendarMonthWeeks = [...this.calendarMonthWeeks.slice(1), numberOfWeeks];
     } else if (monthTransition === MONTH_SELECTION_TRANSITION) {
       if (onMonthChange) onMonthChange(newMonth);
@@ -975,7 +983,6 @@ class DayPicker extends React.PureComponent {
       orientation,
       renderWeekHeaderElement,
       styles,
-      locale,
     } = this.props;
 
     const { calendarMonthWidth } = this.state;

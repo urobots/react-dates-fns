@@ -217,7 +217,7 @@ export default class DayPickerSingleDateController extends React.PureComponent {
     this.isTouchDevice = isTouchDevice();
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     const {
       date,
       focused,
@@ -346,7 +346,7 @@ export default class DayPickerSingleDateController extends React.PureComponent {
     }
   }
 
-  componentWillUpdate() {
+  UNSAFE_componentWillUpdate() {
     // const today = addHours(startOfDay(new Date()), 12);
   }
 
@@ -408,7 +408,14 @@ export default class DayPickerSingleDateController extends React.PureComponent {
     });
 
     const prevMonth = subMonths(currentMonth, 1);
-    const prevMonthVisibleDays = getVisibleDays(prevMonth, 1, enableOutsideDays, true, this.props.locale);
+    const { locale } = this.props;
+    const prevMonthVisibleDays = getVisibleDays(
+      prevMonth,
+      1,
+      enableOutsideDays,
+      true,
+      locale,
+    );
 
     this.setState({
       currentMonth: prevMonth,
@@ -435,7 +442,14 @@ export default class DayPickerSingleDateController extends React.PureComponent {
     });
 
     const nextMonth = addMonths(currentMonth, numberOfMonths + 1);
-    const nextMonthVisibleDays = getVisibleDays(nextMonth, 1, enableOutsideDays, true, this.props.locale);
+    const { locale } = this.props;
+    const nextMonthVisibleDays = getVisibleDays(
+      nextMonth,
+      1,
+      enableOutsideDays,
+      true,
+      locale,
+    );
     const newCurrentMonth = addMonths(currentMonth, 1);
     this.setState({
       currentMonth: newCurrentMonth,
@@ -451,12 +465,13 @@ export default class DayPickerSingleDateController extends React.PureComponent {
   onMonthChange(newMonth) {
     const { numberOfMonths, enableOutsideDays, orientation } = this.props;
     const withoutTransitionMonths = orientation === VERTICAL_SCROLLABLE;
+    const { locale } = this.props;
     const newVisibleDays = getVisibleDays(
       newMonth,
       numberOfMonths,
       enableOutsideDays,
       withoutTransitionMonths,
-      this.props.locale,
+      locale,
     );
 
     this.setState({
@@ -468,12 +483,13 @@ export default class DayPickerSingleDateController extends React.PureComponent {
   onYearChange(newMonth) {
     const { numberOfMonths, enableOutsideDays, orientation } = this.props;
     const withoutTransitionMonths = orientation === VERTICAL_SCROLLABLE;
+    const { locale } = this.props;
     const newVisibleDays = getVisibleDays(
       newMonth,
       numberOfMonths,
       enableOutsideDays,
       withoutTransitionMonths,
-      this.props.locale,
+      locale,
     );
 
     this.setState({
@@ -569,12 +585,13 @@ export default class DayPickerSingleDateController extends React.PureComponent {
     const initialVisibleMonthThunk = initialVisibleMonth || (date ? () => date : () => this.today);
     const currentMonth = initialVisibleMonthThunk();
     const withoutTransitionMonths = orientation === VERTICAL_SCROLLABLE;
+    const { locale } = this.props;
     const visibleDays = this.getModifiers(getVisibleDays(
       currentMonth,
       numberOfMonths,
       enableOutsideDays,
       withoutTransitionMonths,
-      this.props.locale,
+      locale,
     ));
     return { currentMonth, visibleDays };
   }

@@ -1,8 +1,6 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
 import { withInfo } from '@storybook/addon-info';
-import format from 'date-fns/format';
-import getDate from 'date-fns/getDate';
 import DirectionProvider, { DIRECTIONS } from 'react-with-direction/dist/DirectionProvider';
 import DayPicker from '../src/components/DayPicker';
 

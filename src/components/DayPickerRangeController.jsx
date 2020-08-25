@@ -285,7 +285,7 @@ export default class DayPickerRangeController extends React.PureComponent {
     this.getFirstFocusableDay = this.getFirstFocusableDay.bind(this);
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     const {
       startDate,
       endDate,
@@ -938,7 +938,14 @@ export default class DayPickerRangeController extends React.PureComponent {
     });
 
     const prevMonth = subMonths(currentMonth, 2);
-    const prevMonthVisibleDays = getVisibleDays(prevMonth, 1, enableOutsideDays, true, this.props.locale);
+    const { locale } = this.props;
+    const prevMonthVisibleDays = getVisibleDays(
+      prevMonth,
+      1,
+      enableOutsideDays,
+      true,
+      locale,
+    );
 
     const newCurrentMonth = subMonths(currentMonth, 1);
     this.setState({
@@ -970,7 +977,14 @@ export default class DayPickerRangeController extends React.PureComponent {
     });
 
     const nextMonth = addMonths(currentMonth, numberOfMonths + 1);
-    const nextMonthVisibleDays = getVisibleDays(nextMonth, 1, enableOutsideDays, true, this.props.locale);
+    const { locale } = this.props;
+    const nextMonthVisibleDays = getVisibleDays(
+      nextMonth,
+      1,
+      enableOutsideDays,
+      true,
+      locale,
+    );
     const newCurrentMonth = addMonths(currentMonth, 1);
     this.setState({
       currentMonth: newCurrentMonth,
@@ -988,12 +1002,13 @@ export default class DayPickerRangeController extends React.PureComponent {
   onMonthChange(newMonth) {
     const { numberOfMonths, enableOutsideDays, orientation } = this.props;
     const withoutTransitionMonths = orientation === VERTICAL_SCROLLABLE;
+    const { locale } = this.props;
     const newVisibleDays = getVisibleDays(
       newMonth,
       numberOfMonths,
       enableOutsideDays,
       withoutTransitionMonths,
-      this.props.locale,
+      locale,
     );
 
     this.setState({
@@ -1005,12 +1020,13 @@ export default class DayPickerRangeController extends React.PureComponent {
   onYearChange(newMonth) {
     const { numberOfMonths, enableOutsideDays, orientation } = this.props;
     const withoutTransitionMonths = orientation === VERTICAL_SCROLLABLE;
+    const { locale } = this.props;
     const newVisibleDays = getVisibleDays(
       newMonth,
       numberOfMonths,
       enableOutsideDays,
       withoutTransitionMonths,
-      this.props.locale,
+      locale,
     );
 
     this.setState({
@@ -1025,7 +1041,14 @@ export default class DayPickerRangeController extends React.PureComponent {
 
     const numberOfVisibleMonths = Object.keys(visibleDays).length;
     const nextMonth = addMonths(currentMonth, numberOfVisibleMonths);
-    const newVisibleDays = getVisibleDays(nextMonth, numberOfMonths, enableOutsideDays, true, this.props.locale);
+    const { locale } = this.props;
+    const newVisibleDays = getVisibleDays(
+      nextMonth,
+      numberOfMonths,
+      enableOutsideDays,
+      true,
+      locale,
+    );
 
     this.setState({
       visibleDays: {
@@ -1119,12 +1142,13 @@ export default class DayPickerRangeController extends React.PureComponent {
     );
     const currentMonth = initialVisibleMonthThunk();
     const withoutTransitionMonths = orientation === VERTICAL_SCROLLABLE;
+    const { locale } = this.props;
     const visibleDays = this.getModifiers(getVisibleDays(
       currentMonth,
       numberOfMonths,
       enableOutsideDays,
       withoutTransitionMonths,
-      this.props.locale,
+      locale,
     ));
     return { currentMonth, visibleDays };
   }
@@ -1229,10 +1253,12 @@ export default class DayPickerRangeController extends React.PureComponent {
     const { hoverDate } = this.state || {};
 
     const isForwardRange = !!startDate && !endDate && (
-      (hoverDate >= startDate ? isWithinInterval(day, { start: startDate, end: hoverDate }) : false) || isSameDay(hoverDate, day)
+      (hoverDate >= startDate ? isWithinInterval(day, { start: startDate, end: hoverDate }) : false)
+      || isSameDay(hoverDate, day)
     );
     const isBackwardRange = !!endDate && !startDate && (
-      (hoverDate <= endDate ? isWithinInterval(day, { start: hoverDate, end: endDate }) : false) || isSameDay(hoverDate, day)
+      (hoverDate <= endDate ? isWithinInterval(day, { start: hoverDate, end: endDate }) : false)
+      || isSameDay(hoverDate, day)
     );
 
     const isValidDayHovered = hoverDate && !this.isBlocked(hoverDate);

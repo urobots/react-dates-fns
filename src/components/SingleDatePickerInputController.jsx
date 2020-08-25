@@ -31,7 +31,7 @@ const propTypes = forbidExtraProps({
   children: PropTypes.node,
 
   date: PropTypes.object,
-  onDateChange: PropTypes.func.isRequired,
+  onDateChange: PropTypes.func,
 
   focused: PropTypes.bool,
   onFocusChange: PropTypes.func.isRequired,
@@ -81,6 +81,7 @@ const defaultProps = {
   children: null,
 
   date: null,
+  onDateChange() {},
   focused: false,
 
   placeholder: '',
@@ -123,7 +124,6 @@ const defaultProps = {
   isRTL: false,
 };
 
-/** @extends React.Component */
 export default class SingleDatePickerInputController extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -199,10 +199,11 @@ export default class SingleDatePickerInputController extends React.PureComponent
 
   getDateString(date) {
     const displayFormat = this.getDisplayFormat();
+    const { locale } = this.props;
     if (date && displayFormat) {
-      return format(date, displayFormat, { locale: getLocale(this.props.locale) });
+      return format(date, displayFormat, { locale: getLocale(locale) });
     }
-    return toLocalizedDateString(date, null, this.props.locale);
+    return toLocalizedDateString(date, null, locale);
   }
 
   clearDate() {

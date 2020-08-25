@@ -5,7 +5,6 @@ import parseISO from 'date-fns/parseISO';
 
 import { ISO_FORMAT } from '../constants';
 
-
 export default function toISODateString(date, currentFormat) {
   if (Object.prototype.toString.call(date) === '[object Date]') {
     if (isValid(date)) {

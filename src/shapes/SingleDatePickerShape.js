@@ -15,7 +15,7 @@ import NavPositionShape from './NavPositionShape';
 export default {
   // required props for a functional interactive SingleDatePicker
   date: PropTypes.object,
-  onDateChange: PropTypes.func.isRequired,
+  onDateChange: PropTypes.func,
 
   focused: PropTypes.bool,
   onFocusChange: PropTypes.func.isRequired,
